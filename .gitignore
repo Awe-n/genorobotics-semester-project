@@ -1,0 +1,8 @@
+# ignore the src/assets folder
+src/assets/*
+
+# ignore all the __pycache__ folders
+__pycache__/
+
+# ignore the .DS_Store files
+.DS_Store
