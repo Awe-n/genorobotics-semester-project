@@ -1,7 +1,6 @@
 import os
 from lib.general_helpers.run_command import run_command
 from lib.general_helpers.process_fastq import split_fastq
-from lib.consensus.consensus_helpers.best_alignment import select_best_alignment
 from Bio import SeqIO
 
 def run_consensus_pipeline_80_20_longest_sequence(input_name: str, input_fastq_path: str, output_dir: str):
@@ -58,5 +57,3 @@ def run_consensus_pipeline_80_20_longest_sequence(input_name: str, input_fastq_p
 
     # Print out the total time for the pipeline
     print(f"Total time taken for the pipeline: {total_time_taken:.2f} seconds.")
-
-main()
