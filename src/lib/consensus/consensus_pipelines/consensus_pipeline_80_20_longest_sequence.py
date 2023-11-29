@@ -51,9 +51,18 @@ def run_consensus_pipeline_80_20_longest_sequence(input_name: str, input_fastq_p
     _, racon_time = run_command(racon_command)
     total_time_taken += racon_time
 
+    # Delete intermediate files
+    print("Deleting intermediate files...")
+    os.remove(top_paf_path)
+    os.remove(remaining_paf_path)
+    os.remove(top_sequences_path)
+    os.remove(remaining_sequences_path)
+
     # Print out the total time for each step
     print(f"Minimap2 alignment took {minimap2_time:.2f} seconds.")
     print(f"Total Racon iterations took {total_time_taken - minimap2_time:.2f} seconds.")
 
     # Print out the total time for the pipeline
     print(f"Total time taken for the pipeline: {total_time_taken:.2f} seconds.")
+
+   
