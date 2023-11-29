@@ -1,5 +1,5 @@
 import os
-from ...general_helpers.run_command import run_command
+from lib.general_helpers.run_command import run_command
 
 def identification_pipeline_blastn(input_name: str, database: str = None):
     input_fasta_path = os.path.join("assets", "output", input_name, input_name + "_final_consensus.fasta")
