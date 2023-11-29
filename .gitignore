@@ -1,14 +1,5 @@
-# ignore the content of the src/assets/input folder 
-# except the rbcL_Qiagen_tomato_5000.fastq file
-src/assets/input/rbcL_Qiagen_tomato_5000.fastq
-!src/assets/input/*
-
-# ignore the content of the src/assets/output folder
-# except the rbcL_Qiagen_tomato_5000_final_consensus.fasta file
-# and except the rbcL_Qiagen_tomato_5000_top20_consensus.fasta file
-src/assets/output/rbcL_Qiagen_tomato_5000_final_consensus.fasta
-src/assets/output/rbcL_Qiagen_tomato_5000_top20_consensus.fasta
-!src/assets/output/*
+# ignore the assets folders
+assets/
 
 # ignore all the __pycache__ folders
 __pycache__/
