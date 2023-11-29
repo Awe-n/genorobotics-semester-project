@@ -1,6 +1,6 @@
 # ignore the content of the src/assets/input folder except the rbcL_Qiagen_tomato_5000.fastq file
-!src/assets/input/*
 src/assets/input/rbcL_Qiagen_tomato_5000.fastq
+!src/assets/input/*
 
 # ignore the content of the src/assets/output folder
 src/assets/output/*
