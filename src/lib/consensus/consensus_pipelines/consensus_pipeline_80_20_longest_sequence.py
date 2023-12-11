@@ -4,7 +4,7 @@ from lib.general_helpers.run_command import run_command
 from lib.general_helpers.process_fastq import split_fastq
 from Bio import SeqIO
 
-def run_consensus_pipeline_80_20_longest_sequence(input_name: str, input_fastq_path: str, output_dir: str):
+def run_consensus_pipeline_80_20_longest_sequence(input_name: str, input_fastq_path: str, output_dir: str, wsl: bool = False):
     total_time_taken = 0
 
     # Split the file into top 20% and remaining 80%
@@ -15,12 +15,12 @@ def run_consensus_pipeline_80_20_longest_sequence(input_name: str, input_fastq_p
     top_consensus_path = os.path.join(output_dir, f"{input_name}_top20_consensus.fasta")
     minimap2_command = f"minimap2 -x ava-ont {top_sequences_path} {top_sequences_path} > {top_paf_path}"
     logging.info("Running read alignment with minimap2 on top 20% sequences...")
-    _, minimap2_time = run_command(minimap2_command)
+    _, minimap2_time = run_command(minimap2_command, wsl)
     total_time_taken += minimap2_time
 
     racon_command = f"racon -m 8 -x -6 -g -8 -w 500 {top_sequences_path} {top_paf_path} {top_sequences_path} > {top_consensus_path}"
     logging.info("Generating consensus sequence with racon on top 20% sequences...")
-    _, racon_time = run_command(racon_command)
+    _, racon_time = run_command(racon_command, wsl)
     total_time_taken += racon_time
 
     # Step 1 bis: If the outputted racon file contains more than one sequence, take the longest one
@@ -35,13 +35,13 @@ def run_consensus_pipeline_80_20_longest_sequence(input_name: str, input_fastq_p
     final_consensus_path = os.path.join(output_dir, f"{input_name}_final_consensus.fasta")
     minimap2_command = f"minimap2 -x map-ont {top_consensus_path} {remaining_sequences_path} > {remaining_paf_path}"
     logging.info("Running read alignment with minimap2 on remaining 80% sequences...")
-    _, minimap2_time = run_command(minimap2_command)
+    _, minimap2_time = run_command(minimap2_command, wsl)
     total_time_taken += minimap2_time
 
     # Step 3: Generate the final consensus sequence with racon
     racon_command = f"racon -m 8 -x -6 -g -8 -w 500 {remaining_sequences_path} {remaining_paf_path} {top_consensus_path} > {final_consensus_path}"
     logging.info("Generating final consensus sequence with racon...")
-    _, racon_time = run_command(racon_command)
+    _, racon_time = run_command(racon_command, wsl)
     total_time_taken += racon_time
 
     # Delete intermediate files

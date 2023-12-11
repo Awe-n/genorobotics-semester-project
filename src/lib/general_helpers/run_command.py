@@ -2,7 +2,9 @@ import logging
 import time
 import subprocess
 
-def run_command(command):
+def run_command(command: str, wsl: bool = False):
+    if wsl : 
+        command = ("wsl " + command).replace('\\','/')
     logging.info(f"Running command: {command}")
     start_time = time.time()
     result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
