@@ -6,6 +6,13 @@ def get_logger(name, output_dir, base_name):
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
 
+    # Prevent propagation to the root logger
+    logger.propagate = False
+
+    # Clear existing handlers (if any)
+    if logger.hasHandlers():
+        logger.handlers.clear()
+
     # Create handlers
     log_file = os.path.join(output_dir, f"{base_name}_{name}_pipeline_log.log")
     file_handler = logging.FileHandler(log_file)
