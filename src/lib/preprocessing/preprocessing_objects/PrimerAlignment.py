@@ -1,4 +1,4 @@
-from helpers.alignment import align_primer
+from lib.preprocessing.preprocessing_helpers.alignment import align_primer
 
 class PrimerAlignment():
 
