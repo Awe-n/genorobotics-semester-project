@@ -2,6 +2,8 @@ import glob, gzip, math, random
 import numpy as np
 from Bio import SeqIO, Align
 import os
+import gzip
+import shutil
 
 
 
@@ -26,7 +28,33 @@ def split_fastq(input_path, output_dir, base_name, percentile=20):
     return top_sequences_path, remaining_sequences_path
 
 
+## MILOU'S CODE
 
+def extract_gz(src_file, dst_file):
+    with gzip.open(src_file, 'rb') as f_in:
+        with open(dst_file, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
+
+def process_barcode_folders(expedition_folder) -> list[str]:
+    for root, dirs, files in os.walk(expedition_folder):
+        if root.endswith('fastq_pass'):
+            intermediate_files = []
+
+            for barcode_folder in dirs:
+                barcode_path = os.path.join(root, barcode_folder)
+                output_fastq = os.path.join(barcode_path, f"{barcode_folder}.fastq")
+
+
+                # Extract and concatenate .gz files
+                for file in os.listdir(barcode_path):
+                    if file.endswith('.gz'):
+                        dst_file = os.path.join(barcode_path, file[:-3])
+                        extract_gz(os.path.join(barcode_path, file), dst_file)
+                        intermediate_files.append(dst_file)
+                
+                concatenate_fastq(barcode_path, output_fastq)
+    
+    return intermediate_files
 
 
 

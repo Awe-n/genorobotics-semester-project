@@ -13,8 +13,8 @@ def run_consensus(input_name: str, input_fastq_path: str, consensus_method: str,
     log_file = configure_consensus_logger(output_dir, input_name)
     logging.info(f"Logging set up at {log_file}")
 
-    logging.info("Running consensus pipeline... \n")
-    print("Running consensus pipeline... \n")
+    logging.info("Running consensus pipeline...")
+    print("Running consensus pipeline...")
     
     # If statement to check which consensus method to run
     if consensus_method == "80_20_best_sequence":

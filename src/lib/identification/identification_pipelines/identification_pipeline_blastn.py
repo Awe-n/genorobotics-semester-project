@@ -46,7 +46,7 @@ def check_blast_db(db_name):
     command = f"blastdbcmd -db {db_name} -info"
     return run_command(command)
 
-def identification_pipeline_blastn(input_name: str, database: str = None, download: bool = False):
+def identification_pipeline_blastn(input_name: str, expedition_name: str = None, input_path: str = None, database: str = None, download: bool = False) -> list[tuple[str, str]]:
     databases = {"ITS", "matK", "psbA-trnH", "rbcL"} if database is None else {database}
 
     if download : 
@@ -63,14 +63,25 @@ def identification_pipeline_blastn(input_name: str, database: str = None, downlo
                     filename = download_gene_sequences("ITS")
                 make_blast_db(filename, db)
 
-    input_fasta_path = os.path.join("assets", "output", "consensus", input_name, input_name + "_final_consensus.fasta")
-    output_blastn = os.path.join("assets", "output", "blastn", input_name)
+    if input_path is None :
+        input_path = os.path.join("assets", "output", "consensus", input_name)
+    input_path = os.path.join(input_path, f"{input_name}_final_consensus.fasta")
+
+    output_blastn = os.path.join("assets", "output")
+    if expedition_name is not None:
+        output_blastn = os.path.join(output_blastn, expedition_name, input_name)
+    else:
+        output_blastn = os.path.join(output_blastn, "blastn", input_name)
+
     os.makedirs(output_blastn, exist_ok=True)
 
-
+    xml_files = []
     for db in databases:
         output_blastn_path = os.path.join(output_blastn, db + ".txt")
-        blastn_cmd = f"blastn -query {input_fasta_path} -db {db} -out {output_blastn_path} -max_target_seqs 5"
+        blastn_cmd = f"blastn -query {input_path} -db {db} -out {output_blastn_path} -max_target_seqs 20 -outfmt 5"
         run_command(blastn_cmd)
+        xml_files.append((output_blastn_path, db))
 
     print("You can find identification output at", output_blastn)
+
+    return xml_files
