@@ -2,7 +2,7 @@ import os
 from Bio import Entrez
 from lib.general_helpers.run_command import run_command
 
-def download_gene_sequences(gene_name: str, start: int = 0, end: int = 0, max_records: int = 1000000, batch_size: int = 10000):
+def download_gene_sequences(logger, gene_name: str, start: int = 0, end: int = 0, max_records: int = 1000000, batch_size: int = 10000):
     Entrez.email = "emilien.ordonneau@epfl.ch"
     query = f"{gene_name}[All Fields] AND (is_nuccore[filter] AND \"{start}\"[SLEN] : \"{end}\"[SLEN]))"
     print("Querying ", query)
@@ -38,15 +38,15 @@ def download_gene_sequences(gene_name: str, start: int = 0, end: int = 0, max_re
 
     return filename
 
-def make_blast_db(filename, db_name):
+def make_blast_db(logger, filename, db_name):
     command = f"makeblastdb -in {filename} -dbtype nucl -out {db_name}"
-    run_command(command)
+    run_command(command, logger)
 
-def check_blast_db(db_name):
+def check_blast_db(logger, db_name):
     command = f"blastdbcmd -db {db_name} -info"
-    return run_command(command)
+    return run_command(command, logger)
 
-def identification_pipeline_blastn(input_name: str, expedition_name: str = None, input_path: str = None, database: str = None, download: bool = False) -> list[tuple[str, str]]:
+def identification_pipeline_blastn(logger, input_name: str, expedition_name: str = None, input_path: str = None, database: str = None, download: bool = False) -> list[tuple[str, str]]:
     databases = {"ITS", "matK", "psbA-trnH", "rbcL"} if database is None else {database}
 
     if download : 
@@ -79,7 +79,7 @@ def identification_pipeline_blastn(input_name: str, expedition_name: str = None,
     for db in databases:
         output_blastn_path = os.path.join(output_blastn, db + ".txt")
         blastn_cmd = f"blastn -query {input_path} -db {db} -out {output_blastn_path} -max_target_seqs 20 -outfmt 5"
-        run_command(blastn_cmd)
+        run_command(blastn_cmd, logger)
         xml_files.append((output_blastn_path, db))
 
     print("You can find identification output at", output_blastn)
