@@ -3,6 +3,18 @@ import time
 import subprocess
 
 def run_command(command: str, logger, wsl: bool = False):
+    """
+    Runs a command in the shell and logs the command, execution time, stdout, and stderr.
+
+    Args:
+        command (str): The command to be executed.
+        logger: The logger object used for logging.
+        wsl (bool, optional): Specifies whether to run the command in Windows Subsystem for Linux (WSL). 
+                              Defaults to False.
+
+    Returns:
+        tuple: A tuple containing the result object and the elapsed time in seconds.
+    """
     if wsl : 
         command = ("wsl " + command).replace('\\','/')
     logging.info(f"Running command: {command}")

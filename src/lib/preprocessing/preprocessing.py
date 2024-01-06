@@ -1,4 +1,4 @@
-from lib.general_helpers.configure_logers import configure_preprocessing_logger
+from lib.general_helpers.configure_loggers import configure_preprocessing_logger
 import logging
 
 def run_prepocessing(input_fastq_filename, input_fastq_path, output_dir):
