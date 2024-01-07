@@ -1,23 +1,36 @@
-from lib.general_helpers.configure_logers import configure_identification_logger
+from lib.general_helpers.configure_loggers import configure_identification_logger
 from lib.identification.identification_pipelines.identification_pipeline_blastn import identification_pipeline_blastn
 from lib.identification.identification_pipelines.identification_processing import get_best_species_from_xml
 import os
 import logging
 
-def run_identification(input_name: str, expedition_name: str = None, input_path: str = None, output_dir: str = None, db: str = None):
+def run_identification(input_name: str, expedition_name: str = None, input_path: str = None, output_dir: str = None, db: str = None, logger: logging.Logger = None):
+    """
+    Run the identification pipeline by following these steps:
+    1. Run the BLASTN identification pipeline.
+    2. Get the best species from the resulting XML file.
+
+    Args:
+        input_name (str): The name of the input.
+        expedition_name (str, optional): The name of the expedition. Defaults to None.
+        input_path (str, optional): The path of the input. Defaults to None.
+        output_dir (str, optional): The output directory. Defaults to None.
+        db (str, optional): The database to be used by BLASTN. Defaults to None.
+    """
 
     if (output_dir == None) : 
-        output_dir = os.path.join("assets", "output", "blastn")
+        output_dir = os.path.join("assets", "output", "blastn") if expedition_name == None else os.path.join("assets", "output", expedition_name)
+    os.makedirs(output_dir, exist_ok=True)
 
     # Configure logging
-    log_file = configure_identification_logger(output_dir, input_name)
-    logging.info(f"Logging set up at {log_file}")
+    if logger == None:
+        logger = configure_identification_logger(output_dir, input_name)
+        print(f"Logging set up at {output_dir}/{input_name}_identification_pipeline_log.log")
 
-    logging.info("Running consensus pipeline... \n")
-    print("Running consensus pipeline... \n")
+    logger.info("Running consensus pipeline... \n")
 
-    xml_files = identification_pipeline_blastn(input_name, expedition_name, input_path, db)
+    xml_files = identification_pipeline_blastn(input_name, logger, expedition_name, input_path, db)
+    logger.info(f"XML files : {xml_files}")
     for xml_file, db in xml_files:
         best_species = get_best_species_from_xml(xml_file)
-        logging.info(f"Best species for {db} is {best_species[0]} with alignment {best_species[1][0]} and evalue {best_species[1][1]}")
-        print(f"Best species for {db} is {best_species[0]} with alignment {best_species[1][0]} and evalue {best_species[1][1]}")
+        logger.info(f"Best species for {db} is {best_species[0]} with alignment {best_species[1][0]} and evalue {best_species[1][1]}")
