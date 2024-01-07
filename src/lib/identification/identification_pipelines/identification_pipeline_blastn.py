@@ -135,7 +135,10 @@ def identification_pipeline_blastn(input_name: str, logger, expedition_name: str
         res = curr_db + ".txt"
         output_blastn_path = os.path.join(output_blastn, res)
         blastn_cmd = f"blastn -query {input_path} -db {curr_db} -out {output_blastn_path} -max_target_seqs 20 -outfmt 5"
-        run_bash_command(blastn_cmd, logger)
+        
+        _, blastn_time = run_bash_command(blastn_cmd, logger)
+        logger.info(f"BLASTn command for database {curr_db} took {blastn_time:.2f} seconds.")
+
         xml_files.append((output_blastn_path, curr_db))
 
     return xml_files
