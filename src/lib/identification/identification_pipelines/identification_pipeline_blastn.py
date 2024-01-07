@@ -1,6 +1,6 @@
 import os
 from Bio import Entrez
-from lib.general_helpers.run_command import run_command
+from lib.general_helpers.run_command import run_bash_command
 
 def download_gene_sequences(gene_name: str, logger, start: int = 0, end: int = 0, max_records: int = 1000000, batch_size: int = 10000):
     """
@@ -65,7 +65,7 @@ def make_blast_db(filename, db_name, logger):
         None
     """
     command = f"makeblastdb -in {filename} -dbtype nucl -out {db_name}"
-    run_command(command, logger)
+    run_bash_command(command, logger)
 
 def check_blast_db(db_name, logger):
     """
@@ -79,7 +79,7 @@ def check_blast_db(db_name, logger):
 
     """
     command = f"blastdbcmd -db {db_name} -info"
-    return run_command(command, logger)
+    return run_bash_command(command, logger)
 
 def identification_pipeline_blastn(input_name: str, logger, expedition_name: str = None, input_path: str = None, database: str = None, download: bool = False) -> list[tuple[str, str]]:
     """
@@ -135,7 +135,7 @@ def identification_pipeline_blastn(input_name: str, logger, expedition_name: str
         res = curr_db + ".txt"
         output_blastn_path = os.path.join(output_blastn, res)
         blastn_cmd = f"blastn -query {input_path} -db {curr_db} -out {output_blastn_path} -max_target_seqs 20 -outfmt 5"
-        run_command(blastn_cmd, logger)
+        run_bash_command(blastn_cmd, logger)
         xml_files.append((output_blastn_path, curr_db))
 
     return xml_files

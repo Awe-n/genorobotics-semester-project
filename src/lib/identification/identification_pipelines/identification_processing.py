@@ -1,6 +1,5 @@
 from Bio.Blast import NCBIXML
 
-
 def parse_blastn_xml(input_xml: str) -> list[tuple[str, int, int, int]]:
     """
     Parses a blastn XML file and extracts relevant information from it.

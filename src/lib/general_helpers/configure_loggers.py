@@ -1,5 +1,6 @@
 import os
 import logging
+from datetime import datetime
 
 def get_logger(name, output_dir, base_name):
     """
@@ -24,8 +25,11 @@ def get_logger(name, output_dir, base_name):
     if logger.hasHandlers():
         logger.handlers.clear()
 
+    # Format the current date and time for the log filename
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
     # Create handlers
-    log_file = os.path.join(output_dir, f"{base_name}_{name}_pipeline_log.log")
+    log_file = os.path.join(output_dir, f"{base_name}_{name}_pipeline_log_{timestamp}.log")
     file_handler = logging.FileHandler(log_file)
     file_handler.setLevel(logging.INFO)
 
