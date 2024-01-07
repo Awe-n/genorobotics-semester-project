@@ -119,6 +119,7 @@ def identification_pipeline_blastn(input_name: str, logger, expedition_name: str
 
     if input_path is None :
         input_path = os.path.join("assets", "output", "consensus", input_name)
+
     input_path = os.path.join(input_path, f"{input_name}_final_consensus.fasta")
 
     output_blastn = os.path.join("assets", "output")

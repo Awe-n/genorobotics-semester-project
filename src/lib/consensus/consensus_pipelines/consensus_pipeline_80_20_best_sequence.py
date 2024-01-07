@@ -3,7 +3,6 @@ from lib.general_helpers.run_command import run_command
 from lib.general_helpers.process_fastq import split_fastq
 from lib.consensus.consensus_helpers.best_alignment import select_best_alignment
 from Bio import SeqIO
-import logging
 
 def run_consensus_pipeline_80_20_best_sequence(input_name: str, input_fastq_path: str, output_dir: str, logger: logging.Logger, wsl: bool = False):
     """
