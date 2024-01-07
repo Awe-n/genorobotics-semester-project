@@ -4,7 +4,7 @@ from lib.general_helpers.process_fastq import split_fastq
 from lib.consensus.consensus_helpers.best_alignment import select_best_alignment
 from Bio import SeqIO
 
-def run_consensus_pipeline_80_20_best_sequence(input_name: str, input_fastq_path: str, output_dir: str, logger: logging.Logger, wsl: bool = False):
+def run_consensus_pipeline_80_20_best_sequence(input_name: str, input_fastq_path: str, output_dir: str, logger, wsl: bool = False):
     """
     Runs the consensus pipeline with the following steps:
     1. Splits the input FASTQ file into top 20% and remaining 80% sequences.

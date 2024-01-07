@@ -19,7 +19,7 @@ def run_identification(input_name: str, expedition_name: str = None, input_path:
     """
 
     if (output_dir == None) : 
-        output_dir = os.path.join("assets", "output", "blastn") if expedition_name == None else os.path.join("assets", "output", expedition_name)
+        output_dir = os.path.join("assets", "output", "blastn", input_name) if expedition_name == None else os.path.join("assets", "output", expedition_name)
     os.makedirs(output_dir, exist_ok=True)
 
     # Configure logging
