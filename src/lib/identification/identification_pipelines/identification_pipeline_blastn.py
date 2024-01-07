@@ -65,6 +65,7 @@ def identification_pipeline_blastn(logger, input_name: str, expedition_name: str
 
     if input_path is None :
         input_path = os.path.join("assets", "output", "consensus", input_name)
+
     input_path = os.path.join(input_path, f"{input_name}_final_consensus.fasta")
 
     output_blastn = os.path.join("assets", "output")
@@ -76,6 +77,7 @@ def identification_pipeline_blastn(logger, input_name: str, expedition_name: str
     os.makedirs(output_blastn, exist_ok=True)
 
     xml_files = []
+    
     for db in databases:
         output_blastn_path = os.path.join(output_blastn, db + ".txt")
         blastn_cmd = f"blastn -query {input_path} -db {db} -out {output_blastn_path} -max_target_seqs 20 -outfmt 5"

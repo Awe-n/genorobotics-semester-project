@@ -5,7 +5,7 @@ import subprocess
 def run_command(command: str, logger, wsl: bool = False):
     if wsl : 
         command = ("wsl " + command).replace('\\','/')
-    logging.info(f"Running command: {command}")
+    logger.info(f"Running command: {command}")
     start_time = time.time()
     result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
     elapsed_time = time.time() - start_time
