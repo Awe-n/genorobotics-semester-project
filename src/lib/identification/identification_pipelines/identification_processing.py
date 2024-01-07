@@ -1,11 +1,16 @@
 from Bio.Blast import NCBIXML
-import os
-import logging
 
 
-def parse_blastn_xml(input_xml: str) -> list[tuple[str, int, int, int]] :
+def parse_blastn_xml(input_xml: str) -> list[tuple[str, int, int, int]]:
     """
-    Parses a blastn xml file and returns a list of tuples containing the species name, the coverage percentage and the e-value of the alignment
+    Parses a blastn XML file and extracts relevant information from it.
+
+    Args:
+        input_xml (str): The path to the blastn XML file.
+
+    Returns:
+        list[tuple[str, int, int, int]]: A list of tuples containing the hit definition,
+        percentage identity, expect value, and alignment length for each alignment in the XML file.
     """
     with open(input_xml) as file:
         blast_records = NCBIXML.parse(file)
@@ -18,7 +23,15 @@ def parse_blastn_xml(input_xml: str) -> list[tuple[str, int, int, int]] :
     
 def separate_by_species(results: list[tuple[str, int, int, int]]) -> dict[str, list[tuple[int, int, int]]] :
     """
-    Separates the results of the blastn into a dictionary with the species name as key and the list of tuples as value
+    Separates the results by species.
+
+    Args:
+        results (list[tuple[str, int, int, int]]): A list of tuples representing the results of a blastn query.
+            Each tuple contains the hit definition and three integers representing some data.
+
+    Returns:
+        dict[str, list[tuple[int, int, int]]]: A dictionary where the keys are species names
+            and the values are lists of tuples representing the data for each species.
     """
     species = {}
     for result in results:
@@ -30,7 +43,13 @@ def separate_by_species(results: list[tuple[str, int, int, int]]) -> dict[str, l
 
 def reduce_species_results(results: dict[str, list[tuple[int, int, int]]]) -> dict[str, tuple[int, int, int]] :
     """
-    Reduces the results of the blastn to the best result for each species
+    Reduce the results of species identification by calculating the average alignment and average e-value for each species.
+
+    Args:
+        results (dict[str, list[tuple[int, int, int]]]): A dictionary containing the results of species identification. The keys are species names, and the values are lists of tuples representing alignment, e-value, and alignment length.
+
+    Returns:
+        dict[str, tuple[int, int, int]]: A dictionary containing the reduced results of species identification. The keys are species names, and the values are tuples representing the average alignment and average e-value.
     """
     reduced_results = {}
     for species in results:
@@ -46,9 +65,15 @@ def reduce_species_results(results: dict[str, list[tuple[int, int, int]]]) -> di
     return reduced_results
 
 
-def select_best_species(results: dict[str, tuple[int, int]]) -> tuple[str, tuple[int, int]] :
+def select_best_species(results: dict[str, tuple[int, int]]) -> tuple[str, tuple[int, int]]:
     """
-    Selects the best species from the results of the blastn
+    Selects the best species based on the given results (highest alignment, lowest e-value)
+
+    Args:
+        results (dict[str, tuple[int, int]]): A dictionary containing species as keys and tuples of alignment and e-value as values.
+
+    Returns:
+        tuple[str, tuple[int, int]]: A tuple containing the best species and its corresponding alignment and e-value.
     """
     best_species = None
     best_alignment = 0
@@ -68,7 +93,17 @@ def select_best_species(results: dict[str, tuple[int, int]]) -> tuple[str, tuple
 
 def get_best_species_from_xml(input_xml: str) -> tuple[str, tuple[int, int]] :
     """
-    Returns the best species from the results of the blastn
+    Get the best species from a blastn XML file, by following these steps:
+    1. Parse the XML file.
+    2. Separate the results by species.
+    3. Reduce the results by calculating the average alignment and average e-value for each species.
+    4. Select the best species based on the given results (highest alignment, lowest e-value)
+    
+    Parameters:
+    input_xml (str): The path to the input XML file containing blastn results.
+
+    Returns:
+    tuple[str, tuple[int, int]]: A tuple containing the best species name and a tuple of two integers representing the start and end positions of the best species in the input XML file.
     """
     results = parse_blastn_xml(input_xml)
     species = separate_by_species(results)

@@ -10,6 +10,18 @@ import shutil
 ## AWEN'S CODE
 
 def split_fastq(input_path, output_dir, base_name, percentile=20):
+    """
+    Split a FASTQ file into two separate files based on sequence length.
+
+    Args:
+        input_path (str): Path to the input FASTQ file.
+        output_dir (str): Directory where the output files will be saved.
+        base_name (str): Base name for the output files.
+        percentile (int, optional): The percentile value to split the sequences. Defaults to 20.
+
+    Returns:
+        tuple: A tuple containing the paths to the top percentile sequences file and the remaining sequences file.
+    """
     # Read sequences and sort by length
     sequences = list(SeqIO.parse(input_path, "fastq"))
     sequences.sort(key=lambda x: len(x), reverse=True)
@@ -31,30 +43,20 @@ def split_fastq(input_path, output_dir, base_name, percentile=20):
 ## MILOU'S CODE
 
 def extract_gz(src_file, dst_file):
+    """
+    Extracts a gzipped file.
+
+    Args:
+        src_file (str): Path to the source gzipped file.
+        dst_file (str): Path to the destination file.
+
+    Returns:
+        None
+    """
     with gzip.open(src_file, 'rb') as f_in:
         with open(dst_file, 'wb') as f_out:
             shutil.copyfileobj(f_in, f_out)
 
-def process_barcode_folders(expedition_folder) -> list[str]:
-    for root, dirs, files in os.walk(expedition_folder):
-        if root.endswith('fastq_pass'):
-            intermediate_files = []
-
-            for barcode_folder in dirs:
-                barcode_path = os.path.join(root, barcode_folder)
-                output_fastq = os.path.join(barcode_path, f"{barcode_folder}.fastq")
-
-
-                # Extract and concatenate .gz files
-                for file in os.listdir(barcode_path):
-                    if file.endswith('.gz'):
-                        dst_file = os.path.join(barcode_path, file[:-3])
-                        extract_gz(os.path.join(barcode_path, file), dst_file)
-                        intermediate_files.append(dst_file)
-                
-                concatenate_fastq(barcode_path, output_fastq)
-    
-    return intermediate_files
 
 
 
@@ -95,12 +97,10 @@ def concatenate_fastq(src_folder=None, dst=None):
             f = open(filename, 'rt')
         return f
     fastq_list = [fastq for fastq in glob.glob(f"{src_folder}/*.fastq*")]
-    # print(fastq_list)
     fastq_iterators = [SeqIO.parse(get_file_iterator(fastq), "fastq") for fastq in fastq_list]
     while True:
         for fq in fastq_iterators:
             try:
-                # print(next(fq).format("fastq"), end="")
                 SeqIO.write(next(fq), open(dst,"at"), "fastq")
             except StopIteration:
                 fastq_iterators.remove(fq)
