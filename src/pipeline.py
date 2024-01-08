@@ -21,7 +21,7 @@ def pipeline_single(input_fastq_filename: str, db: str, windows: bool):
 
     # identification
 
-    run_identification(base_name, db=db)
+    run_identification(base_name, database=db)
 
 def main():
     if len(sys.argv) < 2:

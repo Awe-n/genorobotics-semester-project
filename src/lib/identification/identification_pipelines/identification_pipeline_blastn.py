@@ -1,6 +1,6 @@
 import os
 from Bio import Entrez
-from lib.general_helpers.run_command import run_bash_command
+from lib.general_helpers.run_command import run_bash_command, run_command
 
 def download_gene_sequences(gene_name: str, logger, start: int = 0, end: int = 0, max_records: int = 1000000, batch_size: int = 10000):
     """
@@ -136,7 +136,7 @@ def identification_pipeline_blastn(input_name: str, logger, expedition_name: str
         output_blastn_path = os.path.join(output_blastn, res)
         blastn_cmd = f"blastn -query {input_path} -db {curr_db} -out {output_blastn_path} -max_target_seqs 20 -outfmt 5"
         
-        _, blastn_time = run_bash_command(blastn_cmd, logger)
+        _, blastn_time = run_command(blastn_cmd, logger)
         logger.info(f"BLASTn command for database {curr_db} took {blastn_time:.2f} seconds.")
 
         xml_files.append((output_blastn_path, curr_db))
