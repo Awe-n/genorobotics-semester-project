@@ -1,7 +1,6 @@
 from lib.consensus.consensus_pipelines.consensus_pipeline_80_20_best_sequence import run_consensus_pipeline_80_20_best_sequence
 from lib.consensus.consensus_pipelines.consensus_pipeline_80_20_longest_sequence import run_consensus_pipeline_80_20_longest_sequence
-from lib.consensus.consensus_pipelines.consensus_pipeline_streaming import run_consensus_streaming_pipeline
-from lib.consensus.consensus_pipelines.consensus_pipeline_streaming_wip import run_consensus_streaming_pipeline_wip
+from lib.consensus.consensus_pipelines.consensus_pipeline_straightforward_best_sequence import run_consensus_pipeline_straightforward_best_sequence
 from lib.general_helpers.configure_loggers import configure_consensus_logger
 import os
 import logging
@@ -38,11 +37,8 @@ def run_consensus(input_name: str, input_fastq_path: str, consensus_method: str,
     elif consensus_method == "80_20_longest_sequence":
         logger.info("Running consensus pipeline with 80_20_longest_sequence method...")
         run_consensus_pipeline_80_20_longest_sequence(input_name, input_fastq_path, output_dir, logger, windows)
-    elif consensus_method == "streaming":
+    elif consensus_method == "straightforward_best_sequence":
         logger.info("Running consensus pipeline with streaming method...")
-        run_consensus_streaming_pipeline(input_name, input_fastq_path, output_dir, logger, windows)
-    elif consensus_method == "streaming_wip":
-        logger.info("Running consensus pipeline with streaming method WORK IN PROGRESS...")
-        run_consensus_streaming_pipeline_wip(input_name, input_fastq_path, output_dir, logger, windows)
+        run_consensus_pipeline_straightforward_best_sequence(input_name, input_fastq_path, output_dir, logger, windows)
     else:
         raise ValueError(f"Consensus method {consensus_method} not recognized.")

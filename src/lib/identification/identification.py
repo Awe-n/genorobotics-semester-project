@@ -36,7 +36,7 @@ def run_identification(input_name: str, expedition_name: str = None, input_path:
     """
 
     if (output_dir == None) : 
-        output_dir = os.path.join("assets", "output", "blastn") if expedition_name == None else os.path.join("assets", "output", expedition_name)
+        output_dir = os.path.join("assets", "output", "blastn", input_name) if expedition_name == None else os.path.join("assets", "output", expedition_name)
     os.makedirs(output_dir, exist_ok=True)
 
     # Configure logging
@@ -46,9 +46,19 @@ def run_identification(input_name: str, expedition_name: str = None, input_path:
 
     logger.info("Running consensus pipeline... \n")
 
+    best_species_info = {}
+
     xml_files = identification_pipeline_blastn(input_name, logger, expedition_name, input_path, db)
     logger.info(f"XML files : {xml_files}")
     for xml_file, db in xml_files:
         best_species = get_best_species_from_xml(xml_file)
         logger.info(f"Best species for {db} is {best_species[0]} with alignment {best_species[1][0]} and evalue {best_species[1][1]}")
+
+        best_species_info[db] = {
+            "species": best_species[0],
+            "alignment": best_species[1][0],
+            "evalue": best_species[1][1]
+        }
         write_results(output_dir, input_name, best_species[0], db, best_species[1][0], best_species[1][1])
+
+    return best_species_info
