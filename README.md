@@ -169,3 +169,8 @@ Currently, a small dataset called `rbcL_Qiagen_tomato_5000.fastq` (containing 50
 This dataset is used in the test loop of the pipeline.py script in the run example and can be used to check if the environment is correctly installed and if the pipeline is working as intended. 
 
 You can test the single input file pipeline by running the following command in the terminal: `python3 pipeline.py rbcL_Qiagen_tomato_5000.fastq` (or `python3 pipeline.py rbcL_Qiagen_tomato_5000.fastq True` if BLASTn is installed on Windows).
+
+### Additional Notes
+
+- For MacOS, in your .bash_profile file, make sure to put the new lines about BLAST at the beginning of the file
+- the run_command and run_bash_command functions are supposed to run well but they are subject to potential bug, if you encounter a bug when running minimap2, racon or BLASTn command, try to debug those first
