@@ -7,7 +7,7 @@ import os
 from lib.general_helpers.configure_loggers import configure_consensus_logger
 from lib.general_helpers.configure_loggers import configure_identification_logger
 
-def run_streaming_basic_pipeline(input_name: str, input_fastq_path: str, output_dir: str, streaming_logger, db: str = None, wsl: bool = False):
+def run_streaming_basic_pipeline(input_name: str, input_fastq_path: str, output_dir: str, streaming_logger, db: str = None, wsl: bool = False, species_identification_percentage_dominance: float = 80.0, block_size: int = 500):
     total_time_taken = 0
     total_time_taken_minimap2 = 0
     total_time_taken_racon = 0
@@ -28,7 +28,6 @@ def run_streaming_basic_pipeline(input_name: str, input_fastq_path: str, output_
     blastn_result_list = []
 
     # Perform random sampling and save blocks
-    block_size = 500  # Set your block size: reads per block
     for i, block in enumerate(random_sampling_blocks(input_fastq_path, block_size, total_reads)):
         # Block Folder Setup
         block_output_dir = os.path.join(output_dir, f"block_{i+1}")
@@ -82,23 +81,47 @@ def run_streaming_basic_pipeline(input_name: str, input_fastq_path: str, output_
 
         blastn_result_list.append(blastn_result)
 
-        # if since the beginning of the streaming, the same species has been identified 5 times (not necessarily in a row), then stop the streaming and log the species
         if i >= 4:
             species_list = []
             for blastn_result in blastn_result_list:
                 for db, result in blastn_result.items():
                     species_list.append(result['species'])
+
             species_count = {}
             for species in species_list:
                 if species in species_count:
                     species_count[species] += 1
                 else:
                     species_count[species] = 1
+
+            total_identifications = len(species_list)
             for species, count in species_count.items():
-                if count >= 5:
-                    streaming_logger.info(f"Species {species} identified 5 times. Stopping the streaming.")
+                percentage = (count / total_identifications)
+                if percentage >= species_identification_percentage_dominance:
+                    streaming_logger.info(f"Species {species} has been identified in {percentage*100}% of cases. Stopping streaming.")
+                    # Log the alignment and evalue of each time the species has been identified
+                    streaming_logger.info(f"Database, Alignment, E-value details for {species}:")
+                    for blastn_result in blastn_result_list:
+                        for db, result in blastn_result.items():
+                            if result['species'] == species:
+                                streaming_logger.info(f"Database: {db}")
+                                streaming_logger.info(f"Alignment: {result['alignment']}")
+                                streaming_logger.info(f"E-value: {result['evalue']}")
+                                streaming_logger.info(f"--------------------------------------")
+
+                    # Say the names of the other species that have been identified, if any
+                    other_species = set()
+                    for blastn_result in blastn_result_list:
+                        for db, result in blastn_result.items():
+                            if result['species'] != species:
+                                other_species.add(result['species'])
+                    if other_species:
+                        streaming_logger.info("Other species identified:")
+                        for sp in other_species:
+                            streaming_logger.info(sp)
                     goto_end = True
-                
+                    break
+
         if goto_end:
             break
     
