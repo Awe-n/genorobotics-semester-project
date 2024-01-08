@@ -21,7 +21,7 @@ def pipeline_single(input_fastq_filename: str, db: str, wsl: bool):
 
     # identification
 
-    run_identification(base_name, db=db)
+    return run_identification(base_name, db=db)
 
 def main():
     if len(sys.argv) < 2:
@@ -36,7 +36,7 @@ def main():
     if len(sys.argv) >= 4:
         db = sys.argv[3]
 
-    pipeline_single(input_fastq_filename, db, wsl)
+    return pipeline_single(input_fastq_filename, db, wsl)
 
 
 if __name__ == "__main__":
