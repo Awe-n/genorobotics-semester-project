@@ -81,7 +81,7 @@ def check_blast_db(db_name, logger):
     command = f"blastdbcmd -db {db_name} -info"
     return run_bash_command(command, logger)
 
-def identification_pipeline_blastn(input_name: str, logger, expedition_name: str = None, input_path: str = None, database: str = None, download: bool = False) -> list[tuple[str, str]]:
+def identification_pipeline_blastn(input_name: str, logger, expedition_name: str = None, input_path: str = None, output_dir: str = None,  database: str = None, download: bool = False) -> list[tuple[str, str]]:
     """
     Run the BLASTN identification pipeline.
     Works as follows : 
@@ -124,18 +124,12 @@ def identification_pipeline_blastn(input_name: str, logger, expedition_name: str
 
     input_path = os.path.join(input_path, f"{input_name}_final_consensus.fasta")
 
-    output_blastn = os.path.join("assets", "output")
-    if expedition_name is not None:
-        output_blastn = os.path.join(output_blastn, expedition_name, input_name)
-    else:
-        output_blastn = os.path.join(output_blastn, "blastn", input_name)
-
-    os.makedirs(output_blastn, exist_ok=True)
+    os.makedirs(output_dir, exist_ok=True)
 
     xml_files = []
     for curr_db in databases:
         res = curr_db + ".txt"
-        output_blastn_path = os.path.join(output_blastn, res)
+        output_blastn_path = os.path.join(output_dir, res)
         blastn_cmd = f"blastn -query {input_path} -db {curr_db} -out {output_blastn_path} -max_target_seqs 20 -outfmt 5"
         
         _, blastn_time = run_bash_command(blastn_cmd, logger)

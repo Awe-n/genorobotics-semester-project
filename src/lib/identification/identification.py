@@ -35,7 +35,7 @@ def run_identification(input_name: str, expedition_name: str = None, input_path:
 
         best_species_info = {}
 
-        xml_files, total_time_taken_blastn = identification_pipeline_blastn(input_name, logger, expedition_name, input_path, db)
+        xml_files, total_time_taken_blastn = identification_pipeline_blastn(input_name, logger, expedition_name, input_path, output_dir, db)
 
         logger.info(f"XML files : {xml_files}")
         for xml_file, db in xml_files:
