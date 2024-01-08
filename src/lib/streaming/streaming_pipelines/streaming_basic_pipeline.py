@@ -7,7 +7,8 @@ import os
 from lib.general_helpers.configure_loggers import configure_consensus_logger
 from lib.general_helpers.configure_loggers import configure_identification_logger
 
-def run_streaming_basic_pipeline(input_name: str, input_fastq_path: str, output_dir: str, streaming_logger, db: str = None, wsl: bool = False, species_identification_percentage_dominance: float = 80.0, block_size: int = 500):
+def run_streaming_basic_pipeline(input_name: str, input_fastq_path: str, output_dir: str, streaming_logger, db: str = None, wsl: bool = False, species_identification_percentage_dominance: float = 80.0, block_size: int = 500, minimum_block_amount_before_dominance_check: int = 5, consensus_method: str = "80_20_best_sequence", identification_method: str = "blastn"):
+    
     total_time_taken = 0
     total_time_taken_minimap2 = 0
     total_time_taken_racon = 0
@@ -47,7 +48,6 @@ def run_streaming_basic_pipeline(input_name: str, input_fastq_path: str, output_
         consensus_logger.info(f"Logging set up at {consensus_block_output_dir}/{block_input_name}_consensus_pipeline_log.log")
         streaming_logger.info(f"Running consensus pipeline for block {i+1}...")
 
-        consensus_method = "80_20_best_sequence"
         consensus_total_time_taken, consensus_total_time_taken_minimap2, consensus_total_time_taken_racon = run_consensus(block_input_name, block_fastq_path, consensus_method, consensus_block_output_dir, consensus_logger, wsl)
         total_time_taken += consensus_total_time_taken
         total_time_taken_minimap2 += consensus_total_time_taken_minimap2
@@ -56,7 +56,7 @@ def run_streaming_basic_pipeline(input_name: str, input_fastq_path: str, output_
         streaming_logger.info(f"Consensus pipeline for block {i+1} completed")
 
         # Identification Block
-        identification_block_output_dir = os.path.join(block_output_dir, "blastn")
+        identification_block_output_dir = os.path.join(block_output_dir, "identification")
         os.makedirs(identification_block_output_dir, exist_ok=True)
 
         # /block_1/block_1.fastq/block_1_final_consensus.fasta'
@@ -65,7 +65,7 @@ def run_streaming_basic_pipeline(input_name: str, input_fastq_path: str, output_
         identification_logger.info(f"Logging set up at {identification_block_output_dir}/{block_input_name}_identification_pipeline_log.log")
         streaming_logger.info(f"Running identification pipeline for block {i+1}...")
 
-        blastn_result, identification_total_time_taken_blastn = run_identification(input_name=block_input_name, expedition_name=None, input_path=consensus_block_output_dir, output_dir=identification_block_output_dir, db=db, logger=identification_logger)
+        blastn_result, identification_total_time_taken_blastn = run_identification(input_name=block_input_name, expedition_name=None, input_path=consensus_block_output_dir, output_dir=identification_block_output_dir, db=db, logger=identification_logger, identification_method=identification_method)
         total_time_taken += identification_total_time_taken_blastn
         total_time_taken_blastn += identification_total_time_taken_blastn
 
@@ -81,7 +81,7 @@ def run_streaming_basic_pipeline(input_name: str, input_fastq_path: str, output_
 
         blastn_result_list.append(blastn_result)
 
-        if i >= 4:
+        if i >= minimum_block_amount_before_dominance_check:
             species_list = []
             for blastn_result in blastn_result_list:
                 for db, result in blastn_result.items():
