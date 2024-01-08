@@ -4,6 +4,23 @@ from lib.identification.identification_pipelines.identification_processing impor
 import os
 import logging
 
+def write_results(output_dir: str, input_name: str, best_species: str, db: str, alignment: float, evalue: float):
+    """
+    Writes the results of the identification pipeline to a file.
+
+    Args:
+        output_dir (str): The output directory.
+        input_name (str): The name of the input.
+        best_species (str): The best species.
+        db (str): The database used.
+        alignment (float): The alignment score.
+        evalue (float): The evalue.
+    """
+
+    output_file = os.path.join(output_dir, f"{input_name}_identification_results.txt")
+    with open(output_file, "a+") as f:
+        f.write(f"{best_species}\t{db}\t{alignment}\t{evalue}\n")
+
 def run_identification(input_name: str, expedition_name: str = None, input_path: str = None, output_dir: str = None, db: str = None, logger: logging.Logger = None):
     """
     Run the identification pipeline by following these steps:
@@ -34,3 +51,4 @@ def run_identification(input_name: str, expedition_name: str = None, input_path:
     for xml_file, db in xml_files:
         best_species = get_best_species_from_xml(xml_file)
         logger.info(f"Best species for {db} is {best_species[0]} with alignment {best_species[1][0]} and evalue {best_species[1][1]}")
+        write_results(output_dir, input_name, best_species[0], db, best_species[1][0], best_species[1][1])

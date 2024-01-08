@@ -39,7 +39,7 @@ def pipeline_directory(expedition_folder: str, consensus_method: str, windows: b
                     concatenate_fastq(barcode_path, output_fastq)
 
                     logger.info(f"Running consensus for barcode folder {barcode_folder}")
-                    run_consensus(barcode_folder, output_fastq, consensus_method, barcode_path, wsl=windows)
+                    run_consensus(barcode_folder, output_fastq, consensus_method, barcode_path, windows=windows)
                 else :
                     logger.info(f"Consensus already computed for barcode folder {barcode_folder}")
 
