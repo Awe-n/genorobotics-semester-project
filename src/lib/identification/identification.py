@@ -31,7 +31,7 @@ def run_identification(input_name: str, expedition_name: str = None, input_path:
 
     best_species_info = {}
 
-    xml_files = identification_pipeline_blastn(input_name, logger, expedition_name, input_path, db)
+    xml_files, total_time_taken_blastn = identification_pipeline_blastn(input_name, logger, expedition_name, input_path, db)
     logger.info(f"XML files : {xml_files}")
     for xml_file, db in xml_files:
         best_species = get_best_species_from_xml(xml_file)
@@ -43,4 +43,4 @@ def run_identification(input_name: str, expedition_name: str = None, input_path:
             "evalue": best_species[1][1]
         }
 
-    return best_species_info
+    return best_species_info, total_time_taken_blastn

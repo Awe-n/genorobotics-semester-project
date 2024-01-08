@@ -101,6 +101,8 @@ def identification_pipeline_blastn(input_name: str, logger, expedition_name: str
     Returns:
         list[tuple[str, str]]: A list of tuples containing the path to the output XML file and the corresponding database name.
     """
+    total_time_taken_blastn = 0
+
     databases = {"ITS", "matK", "psbA-trnH", "rbcL"} if database is None else {database}
 
     if download : 
@@ -139,6 +141,8 @@ def identification_pipeline_blastn(input_name: str, logger, expedition_name: str
         _, blastn_time = run_bash_command(blastn_cmd, logger)
         logger.info(f"BLASTn command for database {curr_db} took {blastn_time:.2f} seconds.")
 
+        total_time_taken_blastn += blastn_time
+
         xml_files.append((output_blastn_path, curr_db))
 
-    return xml_files
+    return xml_files, total_time_taken_blastn

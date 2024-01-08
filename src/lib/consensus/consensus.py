@@ -23,6 +23,10 @@ def run_consensus(input_name: str, input_fastq_path: str, consensus_method: str,
         output_dir = os.path.join("assets", "output", "consensus", input_name)
     os.makedirs(output_dir, exist_ok=True)
 
+    total_time_taken = 0
+    total_time_taken_minimap2 = 0
+    total_time_taken_racon = 0
+
     # Configure logging
     if logger == None:
         logger = configure_consensus_logger(output_dir, input_name)
@@ -33,12 +37,16 @@ def run_consensus(input_name: str, input_fastq_path: str, consensus_method: str,
     # If statement to check which consensus method to run
     if consensus_method == "80_20_best_sequence":
         logger.info("Running consensus pipeline with 80_20_best_sequence method...")
-        run_consensus_pipeline_80_20_best_sequence(input_name, input_fastq_path, output_dir, logger, wsl)
+        total_time_taken, total_time_taken_minimap2, total_time_taken_racon = run_consensus_pipeline_80_20_best_sequence(input_name, input_fastq_path, output_dir, logger, wsl)
     elif consensus_method == "80_20_longest_sequence":
         logger.info("Running consensus pipeline with 80_20_longest_sequence method...")
-        run_consensus_pipeline_80_20_longest_sequence(input_name, input_fastq_path, output_dir, logger, wsl)
+        total_time_taken, total_time_taken_minimap2, total_time_taken_racon = run_consensus_pipeline_80_20_longest_sequence(input_name, input_fastq_path, output_dir, logger, wsl)        
     elif consensus_method == "straightforward_best_sequence":
         logger.info("Running consensus pipeline with streaming method...")
-        run_consensus_pipeline_straightforward_best_sequence(input_name, input_fastq_path, output_dir, logger, wsl)
+        total_time_taken, total_time_taken_minimap2, total_time_taken_racon = run_consensus_pipeline_straightforward_best_sequence(input_name, input_fastq_path, output_dir, logger, wsl)
     else:
         raise ValueError(f"Consensus method {consensus_method} not recognized.")
+
+    logger.info(f"Consensus pipeline completed. Total time taken: {total_time_taken:.2f} seconds.")
+
+    return total_time_taken, total_time_taken_minimap2, total_time_taken_racon

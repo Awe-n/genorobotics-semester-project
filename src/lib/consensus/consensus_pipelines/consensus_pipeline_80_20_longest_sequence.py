@@ -78,3 +78,5 @@ def run_consensus_pipeline_80_20_longest_sequence(input_name: str, input_fastq_p
     total_time_taken = total_time_taken_minimap2 + total_time_taken_racon
     logger.info(f"Total time taken for the consensus pipeline: {total_time_taken:.2f} seconds.")
     print(f"Total time taken for the consensus pipeline: {total_time_taken:.2f} seconds.")
+
+    return total_time_taken, total_time_taken_minimap2, total_time_taken_racon
