@@ -1,79 +1,106 @@
-EMILIEN README
-
-
-
-
-# GenoRobotics Full Pipeline
+# GenoRobotics Project - Full Pipeline
 
 ## Table of Contents
 
-- [Description](#description)
-
+- [GenoRobotics Project - Full Pipeline](#genorobotics-project---full-pipeline)
+  - [Table of Contents](#table-of-contents)
+  - [Description](#description)
+    - [Available Scripts](#available-scripts)
+    - [Pipeline Overview](#pipeline-overview)
+      - [Standard Bioinformatics Pipeline](#standard-bioinformatics-pipeline)
+      - [Streaming Bioinformatics Pipeline](#streaming-bioinformatics-pipeline)
+    - [Detailed Pipeline Description](#detailed-pipeline-description)
+  - [Installation and Usage](#installation-and-usage)
+    - [Requirements](#requirements)
+    - [Notes for Windows Users](#notes-for-windows-users)
+    - [Notes for macOS Users](#notes-for-macos-users)
+    - [Installing BLASTn on Unix](#installing-blastn-on-unix)
+    - [How to Install BLASTn on Windows](#how-to-install-blastn-on-windows)
+    - [How to Install and Run the Pipeline](#how-to-install-and-run-the-pipeline)
+      - [Setting Up the Environment](#setting-up-the-environment)
+      - [Running the Pipeline Scripts Using Jupyter Notebooks](#running-the-pipeline-scripts-using-jupyter-notebooks)
+      - [Running the Pipeline Scripts Using the Terminal](#running-the-pipeline-scripts-using-the-terminal)
+  - [Output Files Locations](#output-files-locations)
+    - [Log Files Locations](#log-files-locations)
+    - [Consensus, Identification, and Streaming Pipeline Iteration Results](#consensus-identification-and-streaming-pipeline-iteration-results)
+  - [Extra Notes](#extra-notes)
+    - [Test Dataset](#test-dataset)
+    - [Testing the Pipeline](#testing-the-pipeline)
+  - [Authors](#authors)
 
 ## Description
 
-This repository contains the code for the full pipeline of the GenoRobotics project. 
-The pipeline is composed of 3 main steps:
-1. Sequence Preprocessing
-2. Consensus Sequence Generation
-3. Sequence Identification
+This repository hosts the code for the complete pipeline of the GenoRobotics project, offering a suite of bioinformatics pipelines for DNA sequence analysis. The pipelines are designed to cater to both single file analysis and large-scale expeditions, with options for standard and streaming processing.
 
-### Sequence Preprocessing
+Our paper describing the pipelines and their performance is available [here](https://www.overleaf.com/read/mbqjxqjxqjxq).
 
-The sequence preprocessing step is composed of 3 sub-steps:
- - quality filtering
- - primer trimming
- - length filtering
+### Available Scripts
 
-### Consensus Sequence Generation
+- **Single File Standard Pipeline:**
+  - `standard-pipeline.py`: For processing a single input file using the standard bioinformatics pipeline.
+  - `standard-detailed-pipeline.ipynb`: An interactive and detailed version for single file processing.
+- **Expedition Standard Pipeline:**
+  - `expedition-pipeline.py`: For processing multiple files from an expedition using the standard pipeline.
+  - `expedition-detailed-pipeline.ipynb`: An interactive and detailed version for expedition processing.
+- **Single File Streaming Pipeline:**
+  - `streaming-pipeline.py`: For processing a single input file using the streaming bioinformatics pipeline (optimized for efficiency).
+  - `streaming-detailed-pipeline.ipynb`: An interactive and detailed version for single file streaming.
 
-The consensus sequence generation step highly depends on the consensus method selected.
-Currently, the following consensus methods are available:
- - 80/20 consensus, which generates a consensus by first aligning the 20% longest sequences, creating a first consensus sequence, then aligning the remaining 80% sequences to the first consensus sequence, creating a second, usable consensus sequence.
- - streaming consensus, which generates a consensus by first aligning the sequences as they come in, creating a first consensus sequence, then aligning the remaining sequences to the first consensus sequence, creating a second consensus sequence.
+To run the full pipeline, navigate to the `src` folder and choose the appropriate script based on your analysis needs.
 
-### Sequence Identification
+### Pipeline Overview
 
-The sequence identification step is composed of 2 sub-steps:
- - BLASTn search : the consensus sequence is searched against the NCBI nucleotide database using BLASTn
- - BLASTn filtering : the BLASTn results are filtered to keep only the best hit for each species
+#### Standard Bioinformatics Pipeline
+
+The standard pipeline comprises three primary steps:
+
+1. **Sequence Preprocessing:** *(Currently not utilized, but code is maintained for future implementation.)*
+2. **Consensus Sequence Generation:** Relies on the selected consensus method, with options like straightforward consensus, 80/20 best sequence consensus, and 80/20 longest sequence consensus.
+3. **Sequence Identification:** Utilizes BLASTn for identification, which involves a search against the NCBI nucleotide database and subsequent filtering to retain the best hit per species.
+
+#### Streaming Bioinformatics Pipeline
+
+The streaming pipeline parallels the standard pipeline but operates on a stream of sequences, allowing for processing during the sequencing process. It employs random sampling and block-wise iteration for enhanced speed and reduced memory usage. While not yet implementable during live sequencing, it offers significant performance improvements.
+
+### Detailed Pipeline Description
+
+For an in-depth understanding of each step in the pipelines, please refer to our accompanying paper.
 
 ## Installation and Usage
 
 ### Requirements
 
-The following requirements are needed to run the pipeline:
- - Conda 4.8.3
- - BLAST 2.X.0
- - WSL 2 (Windows only)
-
+1. **Conda 4.8.3**
+2. **BLAST 2.X.0**
+3. **WSL 2 (Windows only)**
 
 ### Notes for Windows Users
 
-It is highly recommanded to install BLASTn on WSL and not on Windows, and to run the pipeline on WSL.
-The pipeline was developed and tested on a Windows 11 machine using WSL 2 (Windows Subsystem for Linux).
-You can find more information about WSL 2 here: https://docs.microsoft.com/en-us/windows/wsl/about
-If you insist on installing BLASTn on Windows, you can then run the pipeline on Windows Powershell, and by changing the parameter 'windows' to True when calling the .py scripts, or in the .ipynb notebooks. This will still launch every command in a WSL terminal, so you will still need to have WSL installed, but the BLASTN commands will be launched in a Windows terminal.
+It is highly recommended to install BLASTn on WSL rather than directly on Windows, and to run the pipeline using WSL. The pipeline was developed and tested on a Windows 11 machine with WSL 2 (Windows Subsystem for Linux). For more information about WSL 2, visit [Microsoft's official documentation](https://docs.microsoft.com/en-us/windows/wsl/about).
 
-### How to install BLASTn on Unix
+If you choose to install BLASTn on Windows, you can still run the pipeline in Windows Powershell. Make sure to set the 'windows' parameter to True when calling the `.py` scripts or in the `.ipynb` notebooks. Note that commands will still launch in a WSL terminal, so WSL installation remains a requirement.
+
+### Notes for macOS Users
+
+- A very useful tutorial to install BLASTn on macOS can be found [here](https://www.youtube.com/watch?v=sMImc_iwX4w).
+- In your `.bash_profile`, place the new lines regarding BLAST at the beginning of the file.
+- The `run_command` and `run_bash_command` functions should function correctly, but they might encounter issues. If you face any bugs when running minimap2, racon, or BLASTn commands, address those first.
+
+### Installing BLASTn on Unix
 
 1. **Download BLAST:**
-   - Visit the NCBI BLAST FTP site: [ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)
-   - Choose the appropriate BLAST+ package for your system (look for a file ending in `-x64-linux.tar.gz` for Linux or `-x64-macosx.tar.gz` for macOS).
+   Visit the [NCBI BLAST FTP site](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) and choose the appropriate BLAST+ package for your system (look for a file ending in `-x64-linux.tar.gz` for Linux or `-x64-macosx.tar.gz` for macOS).
 
 2. **Download via Terminal:**
-   - Open your terminal.
-   - Use `wget` or `curl` to download the BLAST+ package. Replace the URL with the one you found for the correct version.
-     ```bash
-     wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.12.0+-x64-linux.tar.gz
-     ```
-     or
-     ```bash
-     curl -O ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.12.0+-x64-linux.tar.gz
-     ```
+   Open your terminal and use `wget` or `curl` to download the BLAST+ package. Replace the URL with the correct version:
+   ```bash
+   wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.X.0+-x64-linux.tar.gz
+   # or
+   curl -O ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.X.0+-x64-linux.tar.gz
+  ```
 
 3. **Extract the Package:**
-   - Once downloaded, extract the tarball using:
+   - Use the following command to extract the tarball:
      ```bash
      tar -zxvf ncbi-blast-2.12.0+-x64-linux.tar.gz
      ```
@@ -104,177 +131,161 @@ If you insist on installing BLASTn on Windows, you can then run the pipeline on 
      sudo yum update          # For CentOS/RedHat
      ```
 
-### How to install BLASTn on Windows
+### How to Install BLASTn on Windows
 
-Here are the following steps to follow to install BLASTn on Windows:
- - download the BLAST+ executables from the NCBI website: https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/
- - unzip the downloaded file
- - add the path to the bin folder of the unzipped folder to the PATH environment variable
- - add the path to the db folder of the unzipped folder to a new BLASTDB environment variable
- - open a new terminal and type `blastn` to check if the installation was successful
+To install BLASTn on Windows, follow these steps carefully:
 
-#### Installation Steps:
+1. **Download BLAST+ Executables:**
+   - Visit the [NCBI BLAST download page](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/).
+   - Look for the Windows version of the BLAST+ executables (e.g., `ncbi-blast-2.12.0+-win64.exe`). Click to download the installer.
 
-1. **Download and install BLAST:**
-   - Visit the NCBI BLAST download page: [BLAST+ executables](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/).
-   - Look for the Windows version of the BLAST+ executables (e.g., `ncbi-blast-2.12.0+-win64.exe`). Click the link to download the installer.
-   - Once downloaded, run the installer. This will typically be a `.exe` file.
-   - Follow the installation wizard. It will guide you through the setup process, including where to install BLAST.
+2. **Install BLAST:**
+   - After downloading, run the `.exe` installer. 
+   - Follow the installation wizard, which will guide you through the setup process, including the installation location for BLAST.
 
-2. **Set Up Environment Variables (if necessary):**
-   - The installer may give you an option to add BLAST to your system's PATH. If it does, select this option.
-   - If not, you can add it manually:
-     - Right-click on 'This PC' or 'Computer' on the desktop or in File Explorer.
-     - Click 'Properties'.
-     - Click 'Advanced system settings'.
-     - In the System Properties window, click the 'Environment Variables' button.
-     - In the Environment Variables window, under 'System variables', find the PATH variable and select it. Click 'Edit'.
-     - In the Edit Environment Variable window, click 'New' and add the path to the BLAST executable (the `bin` directory in your BLAST installation).
-     - In the Environment Variables window, click 'New' to add a new variable. Name it `BLASTDB` and set the value to the path to the BLAST database (the `db` directory in your BLAST installation).
-     - Click 'OK' to close the dialogs.
+3. **Unzip the Downloaded File:**
+   - If the downloaded BLAST+ package is a zip file, unzip it to your desired location.
 
-3. **Test the Installation:**
-   - Open Command Prompt and type:
-     ```cmd
-     blastn -version
+4. **Set Up Environment Variables:**
+   - Add the path to the `bin` folder of the BLAST installation to the PATH environment variable.
+   - Create a new environment variable named `BLASTDB` and set its value to the path of the `db` folder in your BLAST installation.
+   - To set these environment variables:
+     - Right-click on 'This PC' or 'Computer' on the desktop or in File Explorer, then select 'Properties'.
+     - Click 'Advanced system settings' and then the 'Environment Variables' button.
+     - Under 'System variables', find and select the PATH variable, then click 'Edit' to add the BLAST `bin` directory.
+     - Click 'New' to create the `BLASTDB` variable and set its value to the BLAST `db` directory.
+     - Click 'OK' to save changes and close all dialogs.
+
+5. **Test the Installation:**
+   - Open Command Prompt and type `blastn -version`.
+   - This should display the installed version of BLASTn, confirming the successful installation.
+
+Note: The installation process may vary slightly based on the version of the BLAST+ executables. Always follow the instructions provided with the downloaded package. If you encounter any issues, ensure that the paths in your environment variables are correct.
+
+### How to Install and Run the Pipeline
+
+The pipeline is designed to run within an Anaconda environment. The required environment configuration is specified in the file `genorobotics_pipeline.yml`.
+
+#### Setting Up the Environment
+
+1. **Create the Anaconda Environment:**
+   - Open your terminal and navigate to the project's folder.
+   - Run the command `conda env create -f genorobotics_pipeline.yml`. This will create an environment named `genorobotics_pipeline`. (Ensure Anaconda is installed beforehand.)
+
+2. **Activate the Environment:**
+   - In your terminal, type `conda activate genorobotics_pipeline` to activate the newly created environment.
+
+#### Running the Pipeline Scripts Using Jupyter Notebooks
+
+Each pipeline script is paired with a corresponding Jupyter Notebook for interactive use, located in the `src` folder. These notebooks provide an engaging way to execute and visualize each step of the pipeline.
+
+Available Notebooks:
+- `standard-detailed-pipeline.ipynb`
+- `expedition-detailed-pipeline.ipynb`
+- `streaming-detailed-pipeline.ipynb`
+
+To use these notebooks:
+- Open them in Jupyter Lab or Jupyter Notebook.
+- Execute the cells in order to run the pipeline interactively.
+- Make sure to use the correct Anaconda environment when running the notebooks.
+
+#### Running the Pipeline Scripts Using the Terminal
+
+For those preferring a command-line approach, the pipeline scripts can also be executed directly from the terminal.
+
+- **For a Single Input File:**
+  1. Navigate to the `src` directory: `cd src`.
+  2. Execute the pipeline with the command:
+     ```bash
+     python3 pipeline.py <name_of_the_input_fastq_file> <windows (True/False, Optional)> <db (Optional)>
      ```
-   - This should return the installed version of BLASTn, indicating that the installation was successful.
+     - The input FASTQ file should be located in `src/assets/input`.
+     - `windows`: Optional. Set to `True` for Windows with BLASTn installed (default: `False`).
+     - `db`: Optional. Specify the database for BLASTn search. Defaults to using all four databases (ITS, matK, rbcL, trnL) if unspecified.
 
-### How to Install and Run the Pipeline
+- **For an Entire Expedition:**
+  1. Ensure input files are in `src/assets/input/<name_of_the_expedition>`, following the ONT sequencer's output structure.
+  2. Run the expedition pipeline:
+     ```bash
+     python3 pipeline_expedition.py <name_of_the_expedition> <windows> <name_of_the_consensus_method>
+     ```
+     - `windows`: Optional (default: `False`). Set to `True` if BLASTn is installed on Windows.
+     - `name_of_the_consensus_method`: Optional (default: `80_20`). Choices are `80_20` or `streaming`.
 
-The Anaconda environment used to run the pipeline can be found in the file genorobotics_pipeline.yml.
+- **For the Streaming Pipeline:**
+  1. Place the input FASTQ file in `src/assets/input`.
+  2. Run the streaming pipeline:
+     ```bash
+     python3 streaming_pipeline.py <input_fastq_filename> <windows (True/False)> <db> <streaming_method> <consensus_method> <identification_method>
+     ```
+     - `<input_fastq_filename>`: Name of the input FASTQ file.
+     - `<windows>`: Required. Set to `True` for Windows with BLASTn.
+     - `<db>`: Required. Specify the BLASTn search database.
+     - `<streaming_method>`: Required. Choose the streaming method.
+     - `<consensus_method>`: Required. Choose the consensus method.
+     - `<identification_method>`: Required. Choose the identification method.
+     - Example: `python3 streaming_pipeline.py rbcL_Qiagen_tomato_5000.fastq False matK basic_streaming 80_20_best_sequence blastn`.
 
-Here are the following steps to follow to run it:
- - open the current folder in your terminal
- - type `conda env create -f genorobotics_pipeline.yml` in the terminal to create the environment genorobotics_pipeline (Anaconda must be installed)
- - type `conda activate genorobotics_pipeline` in the terminal to activate the environment
- - type `cd src` in the terminal
- - type `python3 pipeline.py <name_of_the_input_fastq_file> <windows (True/False, Optional)> <db (Optional)>` in the terminal to run the pipeline for a single input file. The input file must be located in the `src/assets/input` folder. The windows parameter is optional and is set to False by default. The db parameter is optional, if not specified, the pipeline will use all four databases (ITS, matK, rbcL, trnL) for the BLASTn search. If specified, the pipeline will only use the specified database for the BLASTn search. The db parameter must be one of the following: ITS, matK, rbcL, trnL.
- - type `python3 pipeline_expedition.py <name_of_the_expedition> <windows> <name_of_the_consensus_method>` in the terminal to run the pipeline for an entire expedition. The input files must be located in the `src/assets/input/name_of_the_expedition` folder, as outputted by the ONT sequencer (the pipeline will look for the `fastq_pass` subfolder in this folder). The windows parameter is optional and is set to False by default. It is to be set to True if BLASTn is installed on Windows, as mentionned in the Notes for Windows Users section. The name_of_the_consensus_method parameter is optional and is set to 80_20 by default. The name_of_the_consensus_method parameter must be one of the following: 80_20, streaming.
- - to exit the environment, type `conda deactivate` in the terminal
+To exit the Anaconda environment after running the pipeline, enter `conda deactivate` in the terminal.
 
-Alternatively, you can run the pipeline using the Jupyter Notebooks located in the `src` folder. The notebooks are named `detailed-pipeline.ipynb` and `detailed-pipeline_expedition.ipynb` and contain the same code as the pipeline.py and pipeline_expedition.py scripts, respectively. The notebooks can be run using Jupyter Lab or Jupyter Notebook.
+## Output Files Locations
 
-## Output
+The pipeline is designed to log all operations into specific files, ensuring a clean interface in the terminal and notebooks.
 
-To not overload the terminal/notebooks, everything is logged in specific logfiles. 
+### Log Files Locations
 
-For the pipeline.py script, two logfiles are generated, one for the consensus and one for the identification. The logfiles are located in the `src/assets/output/consensus/<name_of_the_input_fastq_file>` and `src/assets/output/identification/<name_of_the_input_fastq_file>` folders and are named `<name_of_the_input_fastq_file>_consensus.log` and `<name_of_the_input_fastq_file>_identification.log`, respectively.
+1. Log Files for `pipeline.py`
+- **Consensus Logs:**
+  - Location: `src/assets/output/post/<name_of_the_input_fastq_file>/consensus`.
+  - Filename: `<name_of_the_input_fastq_file>_consensus.log`.
+- **Identification Logs:**
+  - Location: `src/assets/output/post/<name_of_the_input_fastq_file>/identification`.
+  - Filename: `<name_of_the_input_fastq_file>_identification.log`.
 
-For the pipeline_expedition.py script, a single logfile is generated for each input file. The logfile is located in the `src/assets/log/name_of_the_expedition/` folder and is named `<name_of_the_expedition>.log`.
+2. Log Files for `pipeline_expedition.py`
+- Individual log files for each input file.
+- Location: `src/assets/log/name_of_the_expedition/`.
+- Filename: `<name_of_the_expedition>.log`.
 
-In `src/assets/output/consensus/<name_of_the_input_fastq_file>`, you can find the consensus sequence in the `<name_of_the_input_fastq_file>_final_consensus.fasta` file.
+3. Log Files for `streaming_pipeline.py`
+  - **Consensus Logs:**
+    - Location: `src/assets/output/streaming/<name_of_the_input_fastq_file>`.
+    - Filename: `<name_of_the_input_fastq_file>_consensus.log`.
 
-In `src/assets/output/identification/<name_of_the_input_fastq_file>`, you can find the BLASTn results in the `<name_of_the_db>.xml` file and the filtered BLASTn results in the `<name_of_the_input_fastq_file>_identification_results.csv` file. 
+### Consensus, Identification, and Streaming Pipeline Iteration Results
 
-## Notes
+1. **Consensus Sequence:**
+  - Location: `src/assets/output/post/<name_of_the_input_fastq_file>/consensus`.
+  - Filename: `<name_of_the_input_fastq_file>_final_consensus.fasta`.
+2. **BLASTn Results:**
+  - Location: `src/assets/output/post/<name_of_the_input_fastq_file>/identification`.
+  - Files:
+    - Raw BLASTn results: `<name_of_the_db>.xml`.
+    - Filtered BLASTn results: `<name_of_the_input_fastq_file>_identification_results.csv`.
+3. **Streaming Pipeline Iteration Results:**
+  - Location for each block: `src/assets/output/streaming/<name_of_the_input_fastq_file>/block_X`.
+  - Contents:
+    - BLASTn results in `block_X/identification`.
+    - Consensus sequences in `block_X/consensus`.
 
-Currently, a small dataset called `rbcL_Qiagen_tomato_5000.fastq` (containing 5000 sequences, ~5 MB) can be found in the `src/assets/input` folder. This is a sampled version from the entire dataset `rbcL_Qiagen_tomato.fastq` (containing ~200k sequences, ~204 MB). 
+## Extra Notes
 
-This dataset is used in the test loop of the pipeline.py script in the run example and can be used to check if the environment is correctly installed and if the pipeline is working as intended. 
-
-You can test the single input file pipeline by running the following command in the terminal: `python3 pipeline.py rbcL_Qiagen_tomato_5000.fastq` (or `python3 pipeline.py rbcL_Qiagen_tomato_5000.fastq True` if BLASTn is installed on Windows).
-
-### Additional Notes
-
-- For MacOS, in your .bash_profile file, make sure to put the new lines about BLAST at the beginning of the file
-- the run_command and run_bash_command functions are supposed to run well but they are subject to potential bug, if you encounter a bug when running minimap2, racon or BLASTn command, try to debug those first
-
-
-
-
-
-
-
-
-
-AWEN README
-
-
-
-
-
-
-
-
-
-
-# GenoRobotics Full Pipeline
-
-## Table of Contents
-
-- [GenoRobotics Full Pipeline](#genorobotics-full-pipeline)
-  - [Table of Contents](#table-of-contents)
-  - [Description](#description)
-    - [Sequence Preprocessing](#sequence-preprocessing)
-    - [Consensus Sequence Generation](#consensus-sequence-generation)
-    - [Sequence Identification](#sequence-identification)
-  - [Installation and Usage](#installation-and-usage)
-    - [Requirements](#requirements)
-    - [Notes for Windows Users](#notes-for-windows-users)
-    - [How to install BLASTn on Unix](#how-to-install-blastn-on-unix)
-    - [How to install BLASTn on Windows](#how-to-install-blastn-on-windows)
-      - [Installation Steps:](#installation-steps)
-    - [How to Install and Run the Pipeline](#how-to-install-and-run-the-pipeline)
-  - [Output](#output)
-  - [Notes](#notes)
-    - [Additional Notes](#additional-notes)
-- [GenoRobotics Full Pipeline](#genorobotics-full-pipeline-1)
-  - [Table of Contents](#table-of-contents-1)
-  - [Description](#description-1)
-    - [Sequence Preprocessing](#sequence-preprocessing-1)
-    - [Consensus Sequence Generation](#consensus-sequence-generation-1)
-    - [Sequence Identification](#sequence-identification-1)
-  - [Installation and Usage](#installation-and-usage-1)
-    - [Requirements](#requirements-1)
-    - [How to Install and Run the Pipeline](#how-to-install-and-run-the-pipeline-1)
-  - [Notes](#notes-1)
-
-## Description
-
-This repository contains the code for the full pipeline of the GenoRobotics project. 
-The pipeline is composed of 3 main steps:
-1. Sequence Preprocessing
-2. Consensus Sequence Generation
-3. Sequence Identification
-
-### Sequence Preprocessing
-
-The sequence preprocessing step is composed of 3 sub-steps:
- - quality filtering
- - primer trimming
- - length filtering
-
-### Consensus Sequence Generation
-
-The consensus sequence generation step highly depends on the consensus method selected.
-
-### Sequence Identification
-
-The sequence identification step is composed of 2 sub-steps:
- - BLASTn search
-
-## Installation and Usage
-
-### Requirements
-
-The following requirements are needed to run the pipeline:
- - Conda 4.8.3
-
-### How to Install and Run the Pipeline
-
-The Anaconda environment used to run the pipeline can be found in the file genorobotics_pipeline.yml.
-
-Here are the following steps to follow to run it:
- - open the current folder in your terminal
- - type `conda env create -f genorobotics_pipeline.yml` in the terminal to create the environment genorobotics_pipeline (Anaconda must be installed)
- - type `conda activate genorobotics_pipeline` in the terminal to activate the environment
- - type `cd src` in the terminal
- - type `python pipeline.py` in the terminal to run full pipeline with a test input dataset
- - to exit the environment, type `conda deactivate` in the terminal
-
-## Notes
+### Test Dataset
 
 Currently, a small dataset called `rbcL_Qiagen_tomato_5000.fastq` (containing 5000 sequences, ~5 MB) can be found in the `src/assets/input` folder. This is a sampled version from the entire dataset `rbcL_Qiagen_tomato.fastq` (containing ~200k sequences, ~204 MB). 
 
-This dataset is used in the test loop of the pipeline.py script in the run example and can be used to check if the environment is correctly installed.
+### Testing the Pipeline
+- To verify the installation and functionality of the pipeline, use the `rbcL_Qiagen_tomato_5000.fastq` dataset.
+- Run the following command in the terminal for a single input file test:
+  ```bash
+  python3 pipeline.py rbcL_Qiagen_tomato_5000.fastq
+  ```
+  For Windows with BLASTn installed, use:
+  ```bash
+  python3 pipeline.py rbcL_Qiagen_tomato_5000.fastq True
+  ```
+
+## Authors
+
+- **Awen Kidel Peña--Albert**
+- **Emilien Ordonneau**
