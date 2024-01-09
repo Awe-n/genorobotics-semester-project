@@ -15,17 +15,6 @@
     - [Notes for Windows Users](#notes-for-windows-users)
     - [Notes for macOS Users](#notes-for-macos-users)
     - [Installing BLASTn on Unix](#installing-blastn-on-unix)
-    - [How to Install BLASTn on Windows](#how-to-install-blastn-on-windows)
-    - [How to Install and Run the Pipeline](#how-to-install-and-run-the-pipeline)
-      - [Setting Up the Environment](#setting-up-the-environment)
-      - [Running the Pipeline Scripts Using Jupyter Notebooks](#running-the-pipeline-scripts-using-jupyter-notebooks)
-      - [Running the Pipeline Scripts Using the Terminal](#running-the-pipeline-scripts-using-the-terminal)
-  - [Output Files Locations](#output-files-locations)
-    - [Log Files Locations](#log-files-locations)
-    - [Consensus, Identification, and Streaming Pipeline Iteration Results](#consensus-identification-and-streaming-pipeline-iteration-results)
-  - [Extra Notes](#extra-notes)
-    - [Test Dataset](#test-dataset)
-    - [Testing the Pipeline](#testing-the-pipeline)
   - [Authors](#authors)
 
 ## Description
@@ -97,7 +86,7 @@ If you choose to install BLASTn on Windows, you can still run the pipeline in Wi
    wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.X.0+-x64-linux.tar.gz
    # or
    curl -O ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.X.0+-x64-linux.tar.gz
-  ```
+    ```
 
 3. **Extract the Package:**
    - Use the following command to extract the tarball:
