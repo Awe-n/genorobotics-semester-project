@@ -1,6 +1,7 @@
 from lib.general_helpers.configure_loggers import configure_identification_logger
 from lib.identification.identification_pipelines.identification_pipeline_blastn import identification_pipeline_blastn
 from lib.identification.identification_pipelines.identification_processing import get_best_species_from_xml
+from lib.identification.identification_helpers.write_identification_results import write_identification_results
 import os
 import logging
 
@@ -47,6 +48,9 @@ def run_identification(input_name: str, expedition_name: str = None, input_path:
                 "alignment": best_species[1][0],
                 "evalue": best_species[1][1]
             }
+        
+        dbs = set(db) if db is not None else {"ITS", "matK", "psbA-trnH", "rbcL"}
+        write_identification_results(output_dir, input_name, best_species_info, dbs)
 
         return best_species_info, total_time_taken_blastn
     else:

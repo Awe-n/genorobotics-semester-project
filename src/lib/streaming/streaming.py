@@ -3,7 +3,7 @@ from lib.streaming.streaming_pipelines.streaming_basic_pipeline import run_strea
 import os
 import logging
 
-def run_streaming(input_name: str, input_fastq_path: str, streaming_method: str, output_dir: str = None, logger : logging.Logger = None, db: str = None, wsl: bool = False, species_identification_percentage_dominance: float = 80.0, block_size: int = 500, minimum_block_amount_before_dominance_check: int = 5, consensus_method: str = "80_20_best_sequence", identification_method: str = "blastn"):
+def run_streaming(input_name: str, input_fastq_path: str, streaming_method: str, output_dir: str = None, logger : logging.Logger = None, db: str = None, windows: bool = False, species_identification_percentage_dominance: float = 80.0, block_size: int = 500, minimum_block_amount_before_dominance_check: int = 5, consensus_method: str = "80_20_best_sequence", identification_method: str = "blastn"):
     """
     Main function to initiate and run the streaming pipeline based on the given parameters.
     :param input_name: Name of the input data.
@@ -12,7 +12,7 @@ def run_streaming(input_name: str, input_fastq_path: str, streaming_method: str,
     :param output_dir: Directory to save output data. Defaults to a structured path in 'assets/output/streaming'.
     :param logger: Logger object for logging the process. If None, a new logger is configured.
     :param db: Database name or path for identification.
-    :param wsl: Boolean flag to indicate if Windows Subsystem for Linux (WSL) is used.
+    :param windows: Boolean flag to indicate if Windows Subsystem for Linux (windows) is used.
     :param species_identification_percentage_dominance: The threshold percentage for species dominance in identification.
     :param block_size: The number of reads in each block.
     :param minimum_block_amount_before_dominance_check: Minimum number of blocks to process before checking species dominance.
@@ -44,6 +44,6 @@ def run_streaming(input_name: str, input_fastq_path: str, streaming_method: str,
     # Execute the appropriate streaming pipeline based on the specified method
     if streaming_method == "basic_streaming":
         logger.info("Running streaming pipeline with basic_streaming method...")
-        run_streaming_basic_pipeline(input_name, input_fastq_path, output_dir, logger, db, wsl, species_identification_percentage_dominance, block_size, minimum_block_amount_before_dominance_check, consensus_method, identification_method)
+        run_streaming_basic_pipeline(input_name, input_fastq_path, output_dir, logger, db, windows, species_identification_percentage_dominance, block_size, minimum_block_amount_before_dominance_check, consensus_method, identification_method)
     else:
         raise ValueError(f"Streaming method {streaming_method} not recognized.")
