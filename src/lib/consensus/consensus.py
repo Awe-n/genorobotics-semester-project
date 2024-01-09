@@ -20,7 +20,7 @@ def run_consensus(input_name: str, input_fastq_path: str, consensus_method: str,
         ValueError: If the specified consensus method is not recognized.
     """
     if output_dir == None : 
-        output_dir = os.path.join("assets", "output", "consensus", input_name)
+        output_dir = os.path.join("assets", "output", "post",  input_name, "consensus")
     os.makedirs(output_dir, exist_ok=True)
 
     total_time_taken = 0

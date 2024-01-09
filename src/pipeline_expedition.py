@@ -74,7 +74,6 @@ def main():
     if len(sys.argv) >= 4:
         name_of_the_consensus_method = sys.argv[2]
     
-
     pipeline_directory(expedition_name, name_of_the_consensus_method, windows)
 
 if __name__ == "__main__":
