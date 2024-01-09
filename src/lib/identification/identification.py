@@ -19,6 +19,8 @@ def run_identification(input_name: str, expedition_name: str = None, input_path:
         db (str, optional): The database to be used by BLASTN. Defaults to None.
     """
 
+    
+
     if (output_dir == None) : 
         output_dir = os.path.join("assets", "output", "post", input_name, "identification") if expedition_name == None else os.path.join("assets", "output", expedition_name)
     os.makedirs(output_dir, exist_ok=True)

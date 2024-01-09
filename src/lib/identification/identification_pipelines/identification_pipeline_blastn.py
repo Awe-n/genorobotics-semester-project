@@ -56,10 +56,10 @@ def identification_pipeline_blastn(input_name: str, logger, expedition_name: str
                 make_blast_db(filename, curr_db, logger)
 
     if input_path is None :
-        input_path = os.path.join("assets", "output", "consensus", input_name)
+        input_path = os.path.join("assets", "output", "post", input_name, "consensus")
 
     input_path = os.path.join(input_path, f"{input_name}_final_consensus.fasta")
-
+    
     os.makedirs(output_dir, exist_ok=True)
 
     xml_files = []
