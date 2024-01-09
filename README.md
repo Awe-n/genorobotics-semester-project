@@ -2,91 +2,82 @@ EMILIEN README
 
 
 
-
-# GenoRobotics Full Pipeline
+# GenoRobotics Project - Full Pipeline
 
 ## Table of Contents
 
-- [Description](#description)
-
+[[toc]]
 
 ## Description
 
-This repository contains the code for the full pipeline of the GenoRobotics project. 
+This repository hosts the code for the complete pipeline of the GenoRobotics project, offering a suite of bioinformatics pipelines for DNA sequence analysis. The pipelines are designed to cater to both single file analysis and large-scale expeditions, with options for standard and streaming processing.
 
-To run the full pipeline, you can use one of the script in the `src` folder:
-- single file standard pipeline:
-  - `standard-pipeline.py` for a single input file using the standard bioinformatics pipeline mentioned above
-  - `standard-detailed-pipeline.ipynb` for a single input file (more detailed and interactive version)
-- expedition standard pipeline:
-  - `expedition-pipeline.py` for an entire expedition using the standard bioinformatics pipeline mentioned above
-  - `expedition-detailed-pipeline.ipynb` for an entire expedition (more detailed and interactive version)
-- single file streaming pipeline:
-  - `streaming-pipeline.py` for a single input file using the streaming bioinformatics pipeline (new)
+### Available Scripts
 
-### Pipeline Description
+- **Single File Standard Pipeline:**
+  - `standard-pipeline.py`: For processing a single input file using the standard bioinformatics pipeline.
+  - `standard-detailed-pipeline.ipynb`: An interactive and detailed version for single file processing.
+- **Expedition Standard Pipeline:**
+  - `expedition-pipeline.py`: For processing multiple files from an expedition using the standard pipeline.
+  - `expedition-detailed-pipeline.ipynb`: An interactive and detailed version for expedition processing.
+- **Single File Streaming Pipeline:**
+  - `streaming-pipeline.py`: For processing a single input file using the streaming bioinformatics pipeline (optimized for efficiency).
+
+To run the full pipeline, navigate to the `src` folder and choose the appropriate script based on your analysis needs.
+
+### Pipeline Overview
 
 #### Standard Bioinformatics Pipeline
 
-The standard bioinformatics pipeline is composed of 3 main steps:
-1. Sequence Preprocessing
-2. Consensus Sequence Generation
-3. Sequence Identification
+The standard pipeline comprises three primary steps:
 
-##### Sequence Preprocessing
+1. **Sequence Preprocessing:** *(Currently not utilized, but code is maintained for future implementation.)*
+2. **Consensus Sequence Generation:** Relies on the selected consensus method, with options like straightforward consensus, 80/20 best sequence consensus, and 80/20 longest sequence consensus.
+3. **Sequence Identification:** Utilizes BLASTn for identification, which involves a search against the NCBI nucleotide database and subsequent filtering to retain the best hit per species.
 
-The sequence preprocessing step is not currently used in the pipeline, but the code is still there in case we want to use it in the future.
+#### Streaming Bioinformatics Pipeline
 
-##### Consensus Sequence Generation
+The streaming pipeline parallels the standard pipeline but operates on a stream of sequences, allowing for processing during the sequencing process. It employs random sampling and block-wise iteration for enhanced speed and reduced memory usage. While not yet implementable during live sequencing, it offers significant performance improvements.
 
-The consensus sequence generation step highly depends on the consensus method selected.
-Currently, the following consensus methods are implemented:
+### Detailed Pipeline Description
 
- - 80/20 consensus, which generates a consensus by first aligning the 20% longest sequences, creating a first consensus sequence, then aligning the remaining 80% sequences to the first consensus sequence, creating a second, usable consensus sequence.
- - streaming consensus, which generates a consensus by first aligning the sequences as they come in, creating a first consensus sequence, then aligning the remaining sequences to the first consensus sequence, creating a second consensus sequence.
-
-### Sequence Identification
-
-The sequence identification step is composed of 2 sub-steps:
- - BLASTn search : the consensus sequence is searched against the NCBI nucleotide database using BLASTn
- - BLASTn filtering : the BLASTn results are filtered to keep only the best hit for each species
+For an in-depth understanding of each step in the pipelines, please refer to our accompanying paper.
 
 ## Installation and Usage
 
 ### Requirements
 
-The following requirements are needed to run the pipeline:
- - Conda 4.8.3
- - BLAST 2.X.0
- - WSL 2 (Windows only)
-
+1. **Conda 4.8.3**
+2. **BLAST 2.X.0**
+3. **WSL 2 (Windows only)**
 
 ### Notes for Windows Users
 
-It is highly recommanded to install BLASTn on WSL and not on Windows, and to run the pipeline on WSL.
-The pipeline was developed and tested on a Windows 11 machine using WSL 2 (Windows Subsystem for Linux).
-You can find more information about WSL 2 here: https://docs.microsoft.com/en-us/windows/wsl/about
-If you insist on installing BLASTn on Windows, you can then run the pipeline on Windows Powershell, and by changing the parameter 'windows' to True when calling the .py scripts, or in the .ipynb notebooks. This will still launch every command in a WSL terminal, so you will still need to have WSL installed, but the BLASTN commands will be launched in a Windows terminal.
+It is highly recommended to install BLASTn on WSL rather than directly on Windows, and to run the pipeline using WSL. The pipeline was developed and tested on a Windows 11 machine with WSL 2 (Windows Subsystem for Linux). For more information about WSL 2, visit [Microsoft's official documentation](https://docs.microsoft.com/en-us/windows/wsl/about).
 
-### How to install BLASTn on Unix
+If you choose to install BLASTn on Windows, you can still run the pipeline in Windows Powershell. Make sure to set the 'windows' parameter to True when calling the `.py` scripts or in the `.ipynb` notebooks. Note that commands will still launch in a WSL terminal, so WSL installation remains a requirement.
+
+### Notes for macOS Users
+
+- A very useful tutorial to install BLASTn on macOS can be found [here](https://www.youtube.com/watch?v=sMImc_iwX4w).
+- In your `.bash_profile`, place the new lines regarding BLAST at the beginning of the file.
+- The `run_command` and `run_bash_command` functions should function correctly, but they might encounter issues. If you face any bugs when running minimap2, racon, or BLASTn commands, address those first.
+
+### Installing BLASTn on Unix
 
 1. **Download BLAST:**
-   - Visit the NCBI BLAST FTP site: [ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)
-   - Choose the appropriate BLAST+ package for your system (look for a file ending in `-x64-linux.tar.gz` for Linux or `-x64-macosx.tar.gz` for macOS).
+   Visit the [NCBI BLAST FTP site](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) and choose the appropriate BLAST+ package for your system (look for a file ending in `-x64-linux.tar.gz` for Linux or `-x64-macosx.tar.gz` for macOS).
 
 2. **Download via Terminal:**
-   - Open your terminal.
-   - Use `wget` or `curl` to download the BLAST+ package. Replace the URL with the one you found for the correct version.
-     ```bash
-     wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.12.0+-x64-linux.tar.gz
-     ```
-     or
-     ```bash
-     curl -O ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.12.0+-x64-linux.tar.gz
-     ```
+   Open your terminal and use `wget` or `curl` to download the BLAST+ package. Replace the URL with the correct version:
+   ```bash
+   wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.X.0+-x64-linux.tar.gz
+   # or
+   curl -O ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.X.0+-x64-linux.tar.gz
+  ```
 
 3. **Extract the Package:**
-   - Once downloaded, extract the tarball using:
+   - Use the following command to extract the tarball:
      ```bash
      tar -zxvf ncbi-blast-2.12.0+-x64-linux.tar.gz
      ```
@@ -117,14 +108,37 @@ If you insist on installing BLASTn on Windows, you can then run the pipeline on 
      sudo yum update          # For CentOS/RedHat
      ```
 
+### How to Install BLASTn on Windows
+
+To install BLASTn on Windows, follow these steps:
+
+1. **Download BLAST+ Executables:**
+   - Visit the [NCBI BLAST download page](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) and select the Windows version of the BLAST+ executables (e.g., `ncbi-blast-2.12.0+-win64.exe`). 
+
+2. **Install BLAST:**
+   - Run the downloaded `.exe` installer and follow the setup wizard to install BLAST.
+
+3. **Set Up Environment Variables:**
+   - If the installer doesn't automatically add BLAST to your system's PATH, do it manually:
+     - Right-click 'This PC' or 'Computer' on the desktop or in File Explorer, then click 'Properties'.
+     - Select 'Advanced system settings', then click the 'Environment Variables' button.
+     - Under 'System variables', find and edit the PATH variable to include the path to the BLAST `bin` directory.
+     - Add a new system variable named `BLASTDB` and set its value to the path of the BLAST `db` directory.
+
+4. **Verify Installation:**
+   - To confirm the installation, open Command Prompt and type `blastn -version`. This should display the installed version of BLASTn, confirming a successful installation.
+
+Note: If you encounter any issues, ensure the paths to the `bin` and `db` directories in your environment variables are correct. Updating the environment variables is crucial for BLASTn to function properly in Windows.
+
+
 ### How to install BLASTn on Windows
 
 Here are the following steps to follow to install BLASTn on Windows:
- - download the BLAST+ executables from the NCBI website: https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/
- - unzip the downloaded file
- - add the path to the bin folder of the unzipped folder to the PATH environment variable
- - add the path to the db folder of the unzipped folder to a new BLASTDB environment variable
- - open a new terminal and type `blastn` to check if the installation was successful
+1. download the BLAST+ executables from the [NCBI website](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)
+2. unzip the downloaded file
+3. add the path to the bin folder of the unzipped folder to the PATH environment variable
+4. add the path to the db folder of the unzipped folder to a new BLASTDB environment variable
+5. open a new terminal and type `blastn` to check if the installation was successful
 
 #### Installation Steps:
 
@@ -170,7 +184,7 @@ Alternatively, you can run the pipeline using the Jupyter Notebooks located in t
 
 ## Output
 
-To not overload the terminal/notebooks, everything is logged in specific logfiles. 
+To not overload the terminal/notebooks, everything is logged in specific log files. 
 
 For the pipeline.py script, two logfiles are generated, one for the consensus and one for the identification. The logfiles are located in the `src/assets/output/consensus/<name_of_the_input_fastq_file>` and `src/assets/output/identification/<name_of_the_input_fastq_file>` folders and are named `<name_of_the_input_fastq_file>_consensus.log` and `<name_of_the_input_fastq_file>_identification.log`, respectively.
 
@@ -188,10 +202,7 @@ This dataset is used in the test loop of the pipeline.py script in the run examp
 
 You can test the single input file pipeline by running the following command in the terminal: `python3 pipeline.py rbcL_Qiagen_tomato_5000.fastq` (or `python3 pipeline.py rbcL_Qiagen_tomato_5000.fastq True` if BLASTn is installed on Windows).
 
-### Additional Notes
 
-- For MacOS, in your .bash_profile file, make sure to put the new lines about BLAST at the beginning of the file
-- the run_command and run_bash_command functions are supposed to run well but they are subject to potential bug, if you encounter a bug when running minimap2, racon or BLASTn command, try to debug those first
 
 
 
@@ -216,30 +227,31 @@ AWEN README
 
 ## Table of Contents
 
-- [GenoRobotics Full Pipeline](#genorobotics-full-pipeline)
+- [GenoRobotics Project - Full Pipeline](#genorobotics-project---full-pipeline)
   - [Table of Contents](#table-of-contents)
   - [Description](#description)
-    - [Pipeline Description](#pipeline-description)
+    - [Available Scripts](#available-scripts)
+    - [Pipeline Overview](#pipeline-overview)
       - [Standard Bioinformatics Pipeline](#standard-bioinformatics-pipeline)
-        - [Sequence Preprocessing](#sequence-preprocessing)
-        - [Consensus Sequence Generation](#consensus-sequence-generation)
-    - [Sequence Identification](#sequence-identification)
+      - [Streaming Bioinformatics Pipeline](#streaming-bioinformatics-pipeline)
+    - [Detailed Pipeline Description](#detailed-pipeline-description)
   - [Installation and Usage](#installation-and-usage)
     - [Requirements](#requirements)
     - [Notes for Windows Users](#notes-for-windows-users)
-    - [How to install BLASTn on Unix](#how-to-install-blastn-on-unix)
+    - [Notes for macOS Users](#notes-for-macos-users)
+    - [Installing BLASTn on Unix](#installing-blastn-on-unix)
+- [or](#or)
     - [How to install BLASTn on Windows](#how-to-install-blastn-on-windows)
       - [Installation Steps:](#installation-steps)
     - [How to Install and Run the Pipeline](#how-to-install-and-run-the-pipeline)
   - [Output](#output)
   - [Notes](#notes)
-    - [Additional Notes](#additional-notes)
-- [GenoRobotics Full Pipeline](#genorobotics-full-pipeline-1)
+- [GenoRobotics Full Pipeline](#genorobotics-full-pipeline)
   - [Table of Contents](#table-of-contents-1)
   - [Description](#description-1)
-    - [Sequence Preprocessing](#sequence-preprocessing-1)
-    - [Consensus Sequence Generation](#consensus-sequence-generation-1)
-    - [Sequence Identification](#sequence-identification-1)
+    - [Sequence Preprocessing](#sequence-preprocessing)
+    - [Consensus Sequence Generation](#consensus-sequence-generation)
+    - [Sequence Identification](#sequence-identification)
   - [Installation and Usage](#installation-and-usage-1)
     - [Requirements](#requirements-1)
     - [How to Install and Run the Pipeline](#how-to-install-and-run-the-pipeline-1)
