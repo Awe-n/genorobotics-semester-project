@@ -13,22 +13,35 @@ EMILIEN README
 ## Description
 
 This repository contains the code for the full pipeline of the GenoRobotics project. 
-The pipeline is composed of 3 main steps:
+
+To run the full pipeline, you can use one of the script in the `src` folder:
+- single file standard pipeline:
+  - `standard-pipeline.py` for a single input file using the standard bioinformatics pipeline mentioned above
+  - `standard-detailed-pipeline.ipynb` for a single input file (more detailed and interactive version)
+- expedition standard pipeline:
+  - `expedition-pipeline.py` for an entire expedition using the standard bioinformatics pipeline mentioned above
+  - `expedition-detailed-pipeline.ipynb` for an entire expedition (more detailed and interactive version)
+- single file streaming pipeline:
+  - `streaming-pipeline.py` for a single input file using the streaming bioinformatics pipeline (new)
+
+### Pipeline Description
+
+#### Standard Bioinformatics Pipeline
+
+The standard bioinformatics pipeline is composed of 3 main steps:
 1. Sequence Preprocessing
 2. Consensus Sequence Generation
 3. Sequence Identification
 
-### Sequence Preprocessing
+##### Sequence Preprocessing
 
-The sequence preprocessing step is composed of 3 sub-steps:
- - quality filtering
- - primer trimming
- - length filtering
+The sequence preprocessing step is not currently used in the pipeline, but the code is still there in case we want to use it in the future.
 
-### Consensus Sequence Generation
+##### Consensus Sequence Generation
 
 The consensus sequence generation step highly depends on the consensus method selected.
-Currently, the following consensus methods are available:
+Currently, the following consensus methods are implemented:
+
  - 80/20 consensus, which generates a consensus by first aligning the 20% longest sequences, creating a first consensus sequence, then aligning the remaining 80% sequences to the first consensus sequence, creating a second, usable consensus sequence.
  - streaming consensus, which generates a consensus by first aligning the sequences as they come in, creating a first consensus sequence, then aligning the remaining sequences to the first consensus sequence, creating a second consensus sequence.
 
@@ -206,8 +219,10 @@ AWEN README
 - [GenoRobotics Full Pipeline](#genorobotics-full-pipeline)
   - [Table of Contents](#table-of-contents)
   - [Description](#description)
-    - [Sequence Preprocessing](#sequence-preprocessing)
-    - [Consensus Sequence Generation](#consensus-sequence-generation)
+    - [Pipeline Description](#pipeline-description)
+      - [Standard Bioinformatics Pipeline](#standard-bioinformatics-pipeline)
+        - [Sequence Preprocessing](#sequence-preprocessing)
+        - [Consensus Sequence Generation](#consensus-sequence-generation)
     - [Sequence Identification](#sequence-identification)
   - [Installation and Usage](#installation-and-usage)
     - [Requirements](#requirements)
