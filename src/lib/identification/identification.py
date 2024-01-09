@@ -5,7 +5,7 @@ from lib.identification.identification_helpers.write_identification_results impo
 import os
 import logging
 
-def run_identification(input_name: str, expedition_name: str = None, input_path: str = None, output_dir: str = None, db: str = None, logger: logging.Logger = None, identification_method: str = "blastn"):
+def run_identification(input_name: str, expedition_name: str = None, input_path: str = None, output_dir: str = None, db: str = None, logger: logging.Logger = None, identification_method: str = "blastn", windows: bool = False):
     """
     Run the identification pipeline by following these steps:
     1. Run the BLASTN identification pipeline.
@@ -22,7 +22,7 @@ def run_identification(input_name: str, expedition_name: str = None, input_path:
     
 
     if (output_dir == None) : 
-        output_dir = os.path.join("assets", "output", "post", input_name, "identification") if expedition_name == None else os.path.join("assets", "output", expedition_name)
+        output_dir = os.path.join("assets", "output", "post", input_name, "identification") if expedition_name == None else os.path.join("assets", "output", expedition_name, input_name, "identification")
     os.makedirs(output_dir, exist_ok=True)
 
     # Configure logging
@@ -38,7 +38,7 @@ def run_identification(input_name: str, expedition_name: str = None, input_path:
 
         best_species_info = {}
 
-        xml_files, total_time_taken_blastn = identification_pipeline_blastn(input_name, logger, expedition_name, input_path, output_dir, db)
+        xml_files, total_time_taken_blastn = identification_pipeline_blastn(input_name, logger, expedition_name, input_path, output_dir, db, windows=windows)
 
         logger.info(f"XML files : {xml_files}")
         for xml_file, db in xml_files:

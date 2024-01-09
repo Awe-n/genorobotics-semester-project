@@ -3,7 +3,7 @@ from Bio import Entrez
 from lib.general_helpers.run_command import run_bash_command
 from lib.identification.identification_helpers.make_blast_db import download_gene_sequences, make_blast_db
 
-def check_blast_db(db_name, logger):
+def check_blast_db(db_name, logger, windows: bool = False):
     """
     Check the information of a BLAST database.
 
@@ -15,9 +15,9 @@ def check_blast_db(db_name, logger):
 
     """
     command = f"blastdbcmd -db {db_name} -info"
-    return run_bash_command(command, logger)
+    return run_bash_command(command, logger, windows)
 
-def identification_pipeline_blastn(input_name: str, logger, expedition_name: str = None, input_path: str = None, output_dir: str = None,  database: str = None, download: bool = False) -> list[tuple[str, str]]:
+def identification_pipeline_blastn(input_name: str, logger, expedition_name: str = None, input_path: str = None, output_dir: str = None,  database: str = None, download: bool = False, windows: bool = False) -> list[tuple[str, str]]:
     """
     Run the BLASTN identification pipeline.
     Works as follows : 
@@ -43,7 +43,7 @@ def identification_pipeline_blastn(input_name: str, logger, expedition_name: str
 
     if download : 
         for curr_db in databases:
-            result, _ = check_blast_db(curr_db, logger)
+            result, _ = check_blast_db(curr_db, logger, windows)
             if not result.returncode == 0:
                 if curr_db == "matK":
                     filename = download_gene_sequences("matK", 750, 1500)
@@ -68,7 +68,7 @@ def identification_pipeline_blastn(input_name: str, logger, expedition_name: str
         output_blastn_path = os.path.join(output_dir, res)
         blastn_cmd = f"blastn -query {input_path} -db {curr_db} -out {output_blastn_path} -max_target_seqs 20 -outfmt 5"
         
-        _, blastn_time = run_bash_command(blastn_cmd, logger)
+        _, blastn_time = run_bash_command(blastn_cmd, logger, windows, True)
         logger.info(f"BLASTn command for database {curr_db} took {blastn_time:.2f} seconds.")
 
         total_time_taken_blastn += blastn_time

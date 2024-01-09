@@ -52,7 +52,7 @@ def download_gene_sequences(gene_name: str, logger, start: int = 0, end: int = 0
 
     return filename
 
-def make_blast_db(filename, db_name, logger):
+def make_blast_db(filename, db_name, logger, windows: bool = False):
     """
     Create a BLAST database using the specified input file.
 
@@ -64,4 +64,4 @@ def make_blast_db(filename, db_name, logger):
         None
     """
     command = f"makeblastdb -in {filename} -dbtype nucl -out {db_name}"
-    run_bash_command(command, logger)
+    run_bash_command(command, logger, windows)
