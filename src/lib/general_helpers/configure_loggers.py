@@ -80,3 +80,16 @@ def configure_identification_logger(output_dir, base_name):
         logger: The configured identification logger.
     """
     return get_logger("identification", output_dir, base_name)
+
+def configure_streaming_logger(output_dir, base_name):
+    """
+    Configure and return a logger for streaming.
+
+    Args:
+        output_dir (str): The directory where the log files will be saved.
+        base_name (str): The name of the input file the logger is associated with.
+
+    Returns:
+        logger: The configured streaming logger.
+    """
+    return get_logger("streaming", output_dir, base_name)

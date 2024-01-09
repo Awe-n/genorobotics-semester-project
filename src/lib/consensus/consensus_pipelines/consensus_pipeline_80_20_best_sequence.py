@@ -4,7 +4,7 @@ from lib.general_helpers.process_fastq import split_fastq
 from lib.consensus.consensus_helpers.best_alignment import select_best_alignment
 from Bio import SeqIO
 
-def run_consensus_pipeline_80_20_best_sequence(input_name: str, input_fastq_path: str, output_dir: str, logger, wsl: bool = False):
+def run_consensus_pipeline_80_20_best_sequence(input_name: str, input_fastq_path: str, output_dir: str, logger, windows: bool = False):
     """
     Runs the consensus pipeline with the following steps:
     1. Splits the input FASTQ file into top 20% and remaining 80% sequences.
@@ -18,7 +18,7 @@ def run_consensus_pipeline_80_20_best_sequence(input_name: str, input_fastq_path
         input_fastq_path (str): The path to the input FASTQ file.
         output_dir (str): The directory to save the output files.
         logger: The logger object for logging messages.
-        wsl (bool, optional): Indicates whether running on Windows Subsystem for Linux (WSL). Defaults to False.
+        windows (bool, optional): Indicates whether running on Windows Subsystem for Linux (windows). Defaults to False.
     """
     total_time_taken = 0
     total_time_taken_minimap2 = 0
@@ -32,13 +32,13 @@ def run_consensus_pipeline_80_20_best_sequence(input_name: str, input_fastq_path
     top_consensus_path = os.path.join(output_dir, f"{input_name}_top20_consensus.fasta")
     minimap2_command = f"minimap2 -x ava-ont {top_sequences_path} {top_sequences_path} > {top_paf_path}"
     logger.info("Running minimap2 on top 20% sequences...")
-    _, minimap2_time = run_command(minimap2_command, logger, wsl)
+    _, minimap2_time = run_command(minimap2_command, logger, windows)
     logger.info(f"Minimap2 on 20% longest reads took {minimap2_time:.2f} seconds.")
     total_time_taken_minimap2 += minimap2_time
 
     racon_command = f"racon -m 8 -x -6 -g -8 -w 500 {top_sequences_path} {top_paf_path} {top_sequences_path} > {top_consensus_path}"
     logger.info("Generating consensus with racon on top 20% sequences...")
-    _, racon_time = run_command(racon_command, logger, wsl)
+    _, racon_time = run_command(racon_command, logger, windows)
     logger.info(f"Racon on 20% longest reads took {racon_time:.2f} seconds.")
     total_time_taken_racon += racon_time
 
@@ -54,14 +54,14 @@ def run_consensus_pipeline_80_20_best_sequence(input_name: str, input_fastq_path
     final_consensus_path = os.path.join(output_dir, f"{input_name}_final_consensus.fasta")
     minimap2_command = f"minimap2 -x map-ont {top_consensus_path} {remaining_sequences_path} > {remaining_paf_path}"
     logger.info("Running minimap2 on remaining 80% sequences...")
-    _, minimap2_time = run_command(minimap2_command, logger, wsl)
+    _, minimap2_time = run_command(minimap2_command, logger, windows)
     logger.info(f"Minimap2 on 80% shortest reads took {minimap2_time:.2f} seconds.")
     total_time_taken_minimap2 += minimap2_time
 
     # Step 3: Generate the final consensus sequence with racon
     racon_command = f"racon -m 8 -x -6 -g -8 -w 500 {remaining_sequences_path} {remaining_paf_path} {top_consensus_path} > {final_consensus_path}"
     logger.info("Generating final consensus with racon...")
-    _, racon_time = run_command(racon_command, logger, wsl)
+    _, racon_time = run_command(racon_command, logger, windows)
     logger.info(f"Racon on 80% shortest reads took {racon_time:.2f} seconds.")
     total_time_taken_racon += racon_time    
 
@@ -79,3 +79,5 @@ def run_consensus_pipeline_80_20_best_sequence(input_name: str, input_fastq_path
     # Log the total time for the pipeline
     total_time_taken = total_time_taken_minimap2 + total_time_taken_racon
     logger.info(f"Total time taken for the consensus pipeline: {total_time_taken:.2f} seconds.")
+
+    return total_time_taken, total_time_taken_minimap2, total_time_taken_racon

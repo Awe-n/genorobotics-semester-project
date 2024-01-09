@@ -1,10 +1,11 @@
 from lib.general_helpers.configure_loggers import configure_identification_logger
 from lib.identification.identification_pipelines.identification_pipeline_blastn import identification_pipeline_blastn
 from lib.identification.identification_pipelines.identification_processing import get_best_species_from_xml
+from lib.identification.identification_helpers.write_identification_results import write_identification_results
 import os
 import logging
 
-def run_identification(input_name: str, expedition_name: str = None, input_path: str = None, output_dir: str = None, db: str = None, logger: logging.Logger = None):
+def run_identification(input_name: str, expedition_name: str = None, input_path: str = None, output_dir: str = None, db: str = None, logger: logging.Logger = None, identification_method: str = "blastn"):
     """
     Run the identification pipeline by following these steps:
     1. Run the BLASTN identification pipeline.
@@ -18,8 +19,10 @@ def run_identification(input_name: str, expedition_name: str = None, input_path:
         db (str, optional): The database to be used by BLASTN. Defaults to None.
     """
 
+    
+
     if (output_dir == None) : 
-        output_dir = os.path.join("assets", "output", "blastn", input_name) if expedition_name == None else os.path.join("assets", "output", expedition_name)
+        output_dir = os.path.join("assets", "output", "post", input_name, "identification") if expedition_name == None else os.path.join("assets", "output", expedition_name)
     os.makedirs(output_dir, exist_ok=True)
 
     # Configure logging
@@ -29,18 +32,28 @@ def run_identification(input_name: str, expedition_name: str = None, input_path:
 
     logger.info("Running consensus pipeline... \n")
 
-    best_species_info = {}
+    # If statement to check which identification method to run
+    if identification_method == "blastn":
+        logger.info("Running identification pipeline with blastn method... \n")
 
-    xml_files = identification_pipeline_blastn(input_name, logger, expedition_name, input_path, db)
-    logger.info(f"XML files : {xml_files}")
-    for xml_file, db in xml_files:
-        best_species = get_best_species_from_xml(xml_file)
-        logger.info(f"Best species for {db} is {best_species[0]} with alignment {best_species[1][0]} and evalue {best_species[1][1]}")
+        best_species_info = {}
 
-        best_species_info[db] = {
-            "species": best_species[0],
-            "alignment": best_species[1][0],
-            "evalue": best_species[1][1]
-        }
+        xml_files, total_time_taken_blastn = identification_pipeline_blastn(input_name, logger, expedition_name, input_path, output_dir, db)
 
-    return best_species_info
+        logger.info(f"XML files : {xml_files}")
+        for xml_file, db in xml_files:
+            best_species = get_best_species_from_xml(xml_file)
+            logger.info(f"Best species for {db} is {best_species[0]} with alignment {best_species[1][0]} and evalue {best_species[1][1]}")
+
+            best_species_info[db] = {
+                "species": best_species[0],
+                "alignment": best_species[1][0],
+                "evalue": best_species[1][1]
+            }
+        
+        dbs = set(["ITS", "matK", "psbA-trnH", "rbcL"]) if db is None else ({db} if isinstance(db, str) else set(db))
+        write_identification_results(output_dir, input_name, best_species_info, dbs)
+
+        return best_species_info, total_time_taken_blastn
+    else:
+        raise ValueError(f"Identification method {identification_method} not recognized.")

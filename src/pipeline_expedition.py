@@ -39,7 +39,7 @@ def pipeline_directory(expedition_folder: str, consensus_method: str, windows: b
                     concatenate_fastq(barcode_path, output_fastq)
 
                     logger.info(f"Running consensus for barcode folder {barcode_folder}")
-                    run_consensus(barcode_folder, output_fastq, consensus_method, barcode_path, wsl=windows)
+                    run_consensus(barcode_folder, output_fastq, consensus_method, barcode_path, windows=windows)
                 else :
                     logger.info(f"Consensus already computed for barcode folder {barcode_folder}")
 
@@ -74,7 +74,6 @@ def main():
     if len(sys.argv) >= 4:
         name_of_the_consensus_method = sys.argv[2]
     
-
     pipeline_directory(expedition_name, name_of_the_consensus_method, windows)
 
 if __name__ == "__main__":
