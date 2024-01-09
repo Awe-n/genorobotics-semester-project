@@ -63,7 +63,7 @@ def check_species_dominance(blastn_result_list, species_identification_percentag
     # Log dominant species and stop streaming if dominance threshold is met
     if dominant_percentage >= species_identification_percentage_dominance * 100:
         streaming_logger.info(f"Species {dominant_species} has been identified in {dominant_percentage:.2f}% of cases. Stopping streaming.")
-        dbs = set(db) if db is not None else {"ITS", "matK", "psbA-trnH", "rbcL"}
+        dbs = set(["ITS", "matK", "psbA-trnH", "rbcL"]) if db is None else ({db} if isinstance(db, str) else set(db))
         write_identification_results(output_dir, input_name, blastn_result_list[-1], dbs)
         return dominant_species, True
     return None, False

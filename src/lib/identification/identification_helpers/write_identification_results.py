@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 def write_identification_results(output_dir: str, input_name: str, best_species_info: dict, dbs: set[str]):
     """
@@ -14,10 +15,14 @@ def write_identification_results(output_dir: str, input_name: str, best_species_
     if not isinstance(dbs, set):
         raise ValueError("dbs should be a set of database names.")
 
-    with open(os.path.join(output_dir, f"{input_name}_identification_results.txt"), "w") as f:
+    # Format the current date and time for the log filename
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    with open(os.path.join(output_dir, f"{input_name}_identification_results_{timestamp}.txt"), "w") as f:
         f.write(f"Input name: {input_name}\n")
         f.write(f"Databases used: {', '.join(dbs)}\n")
         f.write("\n")
+
         for db in dbs:
             if db in best_species_info:
                 f.write(f"Best species for {db} is {best_species_info[db]['species']} with alignment {best_species_info[db]['alignment']} and evalue {best_species_info[db]['evalue']}\n")

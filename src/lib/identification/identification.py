@@ -51,7 +51,7 @@ def run_identification(input_name: str, expedition_name: str = None, input_path:
                 "evalue": best_species[1][1]
             }
         
-        dbs = set(db) if db is not None else {"ITS", "matK", "psbA-trnH", "rbcL"}
+        dbs = set(["ITS", "matK", "psbA-trnH", "rbcL"]) if db is None else ({db} if isinstance(db, str) else set(db))
         write_identification_results(output_dir, input_name, best_species_info, dbs)
 
         return best_species_info, total_time_taken_blastn
