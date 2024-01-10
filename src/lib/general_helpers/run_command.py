@@ -1,7 +1,7 @@
 import subprocess
 import time
 
-def run_bash_command(command: str, logger, windows: bool = False):
+def run_bash_command(command: str, logger, windows: bool = False, blastn : bool = False):
     """
     Runs a command in the shell and logs the command, execution time, stdout, and stderr.
 
@@ -14,9 +14,12 @@ def run_bash_command(command: str, logger, windows: bool = False):
     Returns:
         tuple: A tuple containing the result object and the elapsed time in seconds.
     """
-    if windows:
+    if windows :
         # Adjust the command for Windows environment
-        full_command = ("windows " + command).replace('\\', '/')
+        if not blastn : 
+            full_command = ("wsl " + command).replace('\\', '/')
+        else :
+            full_command =command.replace('\\', '/')
     else:
         # Use "bash -l -c" to run the command within the context of the bash profile on UNIX systems
         full_command = f'bash -l -c "{command}"'
@@ -46,7 +49,7 @@ def run_command(command: str, logger, windows: bool = False):
         tuple: A tuple containing the result object and the elapsed time in seconds.
     """
     if windows : 
-        command = ("windows " + command).replace('\\','/')
+        command = ("wsl " + command).replace('\\','/')
     logger.info(f"Running command: {command}")
     start_time = time.time()
     result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)

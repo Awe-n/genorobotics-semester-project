@@ -22,13 +22,13 @@ def run_consensus_for_block(block_input_name, block_fastq_path, consensus_method
     streaming_logger.info(f"Running consensus pipeline for block {block_input_name}...")
     return run_consensus(block_input_name, block_fastq_path, consensus_method, consensus_block_output_dir, consensus_logger, wsl)
 
-def run_identification_for_block(block_input_name, block_output_dir, db, identification_method, streaming_logger, consensus_block_output_dir):
+def run_identification_for_block(block_input_name, block_output_dir, db, identification_method, streaming_logger, consensus_block_output_dir, windows: bool = False):
     # Creates an identification directory within the block directory and runs the identification pipeline.
     identification_block_output_dir = os.path.join(block_output_dir, "identification")
     os.makedirs(identification_block_output_dir, exist_ok=True)
     identification_logger = configure_identification_logger(identification_block_output_dir, block_input_name)
     streaming_logger.info(f"Running identification pipeline for block {block_input_name}...")
-    return run_identification(input_name=block_input_name, input_path=consensus_block_output_dir, output_dir=identification_block_output_dir, db=db, logger=identification_logger, identification_method=identification_method)
+    return run_identification(input_name=block_input_name, input_path=consensus_block_output_dir, output_dir=identification_block_output_dir, db=db, logger=identification_logger, identification_method=identification_method, windows=windows)
 
 def check_species_dominance(blastn_result_list, species_identification_percentage_dominance, streaming_logger, output_dir, input_name, db=None):
     """
@@ -101,7 +101,7 @@ def run_streaming_basic_pipeline(input_name, input_fastq_path, output_dir, strea
         total_time_taken_racon += racon_time
         chunk_iteration_time_taken += consensus_time
 
-        blastn_result, blastn_time = run_identification_for_block(block_input_name, block_output_dir, db, identification_method, streaming_logger, consensus_block_output_dir)
+        blastn_result, blastn_time = run_identification_for_block(block_input_name, block_output_dir, db, identification_method, streaming_logger, consensus_block_output_dir, windows)
         total_time_taken += blastn_time
         total_time_taken_blastn += blastn_time
         chunk_iteration_time_taken += blastn_time
