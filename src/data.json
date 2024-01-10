@@ -1,0 +1,306 @@
+{
+    "50 Block Length": [
+        {
+            "iteration": 1,
+            "blocks_completed": 6,
+            "identified_species": {
+                "Lycium shawii": {
+                    "percentage": 16.67,
+                    "average_alignment": 97.28
+                },
+                "Solanum lycopersicum": {
+                    "percentage": 83.33,
+                    "average_alignment": 98.68
+                }
+            },
+            "final_species": "Solanum lycopersicum"
+        },
+        {
+            "iteration": 2,
+            "blocks_completed": 7,
+            "identified_species": {
+                "Lycium shawii": {
+                    "percentage": 28.57,
+                    "average_alignment": 97.22
+                },
+                "Solanum lycopersicum": {
+                    "percentage": 71.43,
+                    "average_alignment": 98.32
+                }
+            },
+            "final_species": "Solanum lycopersicum"
+        },
+        {
+            "iteration": 3,
+            "blocks_completed": 6,
+            "identified_species": {
+                "Lycium shawii": {
+                    "percentage": 16.67,
+                    "average_alignment": 97.06
+                },
+                "Solanum lycopersicum": {
+                    "percentage": 83.33,
+                    "average_alignment": 98.72
+                }
+            },
+            "final_species": "Solanum lycopersicum"
+        },
+        {
+            "iteration": 4,
+            "blocks_completed": 6,
+            "identified_species": {
+                "Lycium shawii": {
+                    "percentage": 16.67,
+                    "average_alignment": 97.42
+                },
+                "Solanum lycopersicum": {
+                    "percentage": 83.33,
+                    "average_alignment": 98.79
+                }
+            },
+            "final_species": "Solanum lycopersicum"
+        },
+        {
+            "iteration": 5,
+            "blocks_completed": 34,
+            "identified_species": {
+                "Lycium shawii": {
+                    "percentage": 29.41,
+                    "average_alignment": 97.37
+                },
+                "Solanum lycopersicum": {
+                    "percentage": 70.59,
+                    "average_alignment": 98.66
+                }
+            },
+            "final_species": "Solanum lycopersicum"
+        }
+    ],
+    "100 Block Length": [
+        {
+            "iteration": 1,
+            "blocks_completed": 6,
+            "identified_species": {
+                "Lycium shawii": {
+                    "percentage": 16.67,
+                    "average_alignment": 97.45
+                },
+                "Solanum lycopersicum": {
+                    "percentage": 83.33,
+                    "average_alignment": 98.84
+                }
+            },
+            "final_species": "Solanum lycopersicum"
+        },
+        {
+            "iteration": 2,
+            "blocks_completed": 6,
+            "identified_species": {
+                "Lycium shawii": {
+                    "percentage": 16.67,
+                    "average_alignment": 97.62
+                },
+                "Solanum lycopersicum": {
+                    "percentage": 83.33,
+                    "average_alignment": 98.67
+                }
+            },
+            "final_species": "Solanum lycopersicum"
+        },
+        {
+            "iteration": 3,
+            "blocks_completed": 30,
+            "identified_species": {
+                "Lycium shawii": {
+                    "percentage": 30.00,
+                    "average_alignment": 97.38
+                },
+                "Solanum lycopersicum": {
+                    "percentage": 70.00,
+                    "average_alignment": 98.67
+                }
+            },
+            "final_species": "Solanum lycopersicum"
+        },
+        {
+            "iteration": 4,
+            "blocks_completed": 7,
+            "identified_species": {
+                "Lycium shawii": {
+                    "percentage": 28.57,
+                    "average_alignment": 97.22
+                },
+                "Solanum lycopersicum": {
+                    "percentage": 71.43,
+                    "average_alignment": 98.78
+                }
+            },
+            "final_species": "Solanum lycopersicum"
+        },
+        {
+            "iteration": 5,
+            "blocks_completed": 6,
+            "identified_species": {
+                "Lycium shawii": {
+                    "percentage": 16.67,
+                    "average_alignment": 97.10
+                },
+                "Solanum lycopersicum": {
+                    "percentage": 83.33,
+                    "average_alignment": 98.65
+                }
+            },
+            "final_species": "Solanum lycopersicum"
+        }
+    ],
+    "200 Block Length": [
+        {
+            "iteration": 1,
+            "blocks_completed": 6,
+            "identified_species": {
+                "Solanum lycopersicum": {
+                    "percentage": 100.00,
+                    "average_alignment": 98.90
+                }
+            },
+            "final_species": "Solanum lycopersicum"
+        },
+        {
+            "iteration": 2,
+            "blocks_completed": 6,
+            "identified_species": {
+                "Lycium shawii": {
+                    "percentage": 16.67,
+                    "average_alignment": 97.13
+                },
+                "Solanum lycopersicum": {
+                    "percentage": 83.33,
+                    "average_alignment": 98.47
+                }
+            },
+            "final_species": "Solanum lycopersicum"
+        },
+        {
+            "iteration": 3,
+            "blocks_completed": 10,
+            "identified_species": {
+                "Lycium shawii": {
+                    "percentage": 30.00,
+                    "average_alignment": 97.55
+                },
+                "Solanum lycopersicum": {
+                    "percentage": 70.00,
+                    "average_alignment": 98.83
+                }
+            },
+            "final_species": "Solanum lycopersicum"
+        },
+        {
+            "iteration": 4,
+            "blocks_completed": 10,
+            "identified_species": {
+                "Lycium shawii": {
+                    "percentage": 30.00,
+                    "average_alignment": 97.47
+                },
+                "Solanum lycopersicum": {
+                    "percentage": 70.00,
+                    "average_alignment": 98.86
+                }
+            },
+            "final_species": "Solanum lycopersicum"
+        },
+        {
+            "iteration": 5,
+            "blocks_completed": 6,
+            "identified_species": {
+                "Lycium shawii": {
+                    "percentage": 16.67,
+                    "average_alignment": 97.57
+                },
+                "Solanum lycopersicum": {
+                    "percentage": 83.33,
+                    "average_alignment": 98.77
+                }
+            },
+            "final_species": "Solanum lycopersicum"
+        }
+    ],
+    "500 Block Length": [
+        {
+            "iteration": 1,
+            "blocks_completed": 6,
+            "identified_species": {
+                "Lycium shawii": {
+                    "percentage": 16.67,
+                    "average_alignment": 97.14
+                },
+                "Solanum lycopersicum": {
+                    "percentage": 83.33,
+                    "average_alignment": 98.91
+                }
+            },
+            "final_species": "Solanum lycopersicum"
+        },
+        {
+            "iteration": 2,
+            "blocks_completed": 6,
+            "identified_species": {
+                "Lycium shawii": {
+                    "percentage": 16.67,
+                    "average_alignment": 97.73
+                },
+                "Solanum lycopersicum": {
+                    "percentage": 83.33,
+                    "average_alignment": 98.94
+                }
+            },
+            "final_species": "Solanum lycopersicum"
+        },
+        {
+            "iteration": 3,
+            "blocks_completed": 6,
+            "identified_species": {
+                "Lycium shawii": {
+                    "percentage": 16.67,
+                    "average_alignment": 97.73
+                },
+                "Solanum lycopersicum": {
+                    "percentage": 83.33,
+                    "average_alignment": 98.85
+                }
+            },
+            "final_species": "Solanum lycopersicum"
+        },
+        {
+            "iteration": 4,
+            "blocks_completed": 7,
+            "identified_species": {
+                "Lycium shawii": {
+                    "percentage": 28.57,
+                    "average_alignment": 97.73
+                },
+                "Solanum lycopersicum": {
+                    "percentage": 71.43,
+                    "average_alignment": 98.59
+                }
+            },
+            "final_species": "Solanum lycopersicum"
+        },
+        {
+            "iteration": 5,
+            "blocks_completed": 6,
+            "identified_species": {
+                "Lycium shawii": {
+                    "percentage": 16.67,
+                    "average_alignment": 96.37
+                },
+                "Solanum lycopersicum": {
+                    "percentage": 83.33,
+                    "average_alignment": 98.90
+                }
+            },
+            "final_species": "Solanum lycopersicum"
+        }
+    ]
+}
