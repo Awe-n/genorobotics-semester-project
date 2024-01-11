@@ -213,6 +213,9 @@ For those preferring a command-line approach, the pipeline scripts can also be e
      - `<streaming_method>`: Required. Choose the streaming method.
      - `<consensus_method>`: Required. Choose the consensus method.
      - `<identification_method>`: Required. Choose the identification method.
+     - `<block_size>`: Optional. Specify the block size for block-wise streaming. Defaults to 1000.
+     - `<minimum_block_amount_before_dominance_check>`: Optional. Specify the minimum number of blocks before checking for dominance. Defaults to 10.
+     - `<species_identification_percentage_dominance>`: Optional. Specify the percentage of dominance for species identification. Defaults to 0.8.
      - Example: `python3 streaming_pipeline.py rbcL_Qiagen_tomato_5000.fastq False matK basic_streaming 80_20_best_sequence blastn`.
 
 To exit the Anaconda environment after running the pipeline, enter `conda deactivate` in the terminal.
