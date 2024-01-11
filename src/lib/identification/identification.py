@@ -41,11 +41,11 @@ def run_identification(input_name: str, expedition_name: str = None, input_path:
         xml_files, total_time_taken_blastn = identification_pipeline_blastn(input_name, logger, expedition_name, input_path, output_dir, db, windows=windows)
 
         logger.info(f"XML files : {xml_files}")
-        for xml_file, db in xml_files:
+        for xml_file, database in xml_files:
             best_species = get_best_species_from_xml(xml_file)
-            logger.info(f"Best species for {db} is {best_species[0]} with alignment {best_species[1][0]} and evalue {best_species[1][1]}")
+            logger.info(f"Best species for {database} is {best_species[0]} with alignment {best_species[1][0]} and evalue {best_species[1][1]}")
 
-            best_species_info[db] = {
+            best_species_info[database] = {
                 "species": best_species[0],
                 "alignment": best_species[1][0],
                 "evalue": best_species[1][1]
